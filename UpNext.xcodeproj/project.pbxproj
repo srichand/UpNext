@@ -12,6 +12,7 @@
 		72C0BDB5E2CD630390C6FD7E /* UpNextApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4622FF8AA10912132C9877 /* UpNextApp.swift */; };
 		72F55C43FFD9AE8A0758E592 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F554DCBFA5DA64FE8F43FE /* SettingsView.swift */; };
 		7C10FE1EB86207621558F178 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 801A084FF0CF4242218ABD7C /* Assets.xcassets */; };
+		80B2C607EB889C43D482527B /* Color+Brand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8080AE305B3B3ADB7A1968 /* Color+Brand.swift */; };
 		954F93A96C377F505CA7BFBA /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5C87AEDFEC5C4FCFA03ABD /* EventModel.swift */; };
 		FF937CCE83BE99B83A3A899D /* MenuBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D16033B219CA7D55237AF10B /* MenuBarViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -19,6 +20,7 @@
 /* Begin PBXFileReference section */
 		260BC02D39D277A10C1BF439 /* CalendarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarManager.swift; sourceTree = "<group>"; };
 		4B20C27F287355388CF92DCA /* UpNext.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = UpNext.entitlements; sourceTree = "<group>"; };
+		4F8080AE305B3B3ADB7A1968 /* Color+Brand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Brand.swift"; sourceTree = "<group>"; };
 		801A084FF0CF4242218ABD7C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9E2AF657961204F11E7A37B9 /* MenuBarPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarPopover.swift; sourceTree = "<group>"; };
 		B6F554DCBFA5DA64FE8F43FE /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -35,6 +37,14 @@
 				C7D8EECCA285D1561DDFF1DD /* UpNext.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		0ED0FAB9FA83C1A8C297DBB1 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				4F8080AE305B3B3ADB7A1968 /* Color+Brand.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		33A341FCB117E5F729FE39A7 /* Views */ = {
@@ -58,6 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				BF4622FF8AA10912132C9877 /* UpNextApp.swift */,
+				0ED0FAB9FA83C1A8C297DBB1 /* Extensions */,
 				ECB746894C6C3F9C1B755370 /* Models */,
 				BB1F61BF26578599EC2602B4 /* Resources */,
 				3AA109CCEBEEDA7313CABB8C /* Services */,
@@ -171,6 +182,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2511615AA729A96B55563135 /* CalendarManager.swift in Sources */,
+				80B2C607EB889C43D482527B /* Color+Brand.swift in Sources */,
 				954F93A96C377F505CA7BFBA /* EventModel.swift in Sources */,
 				00380092D85819EB0F86FDAF /* MenuBarPopover.swift in Sources */,
 				FF937CCE83BE99B83A3A899D /* MenuBarViewModel.swift in Sources */,

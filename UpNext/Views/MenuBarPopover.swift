@@ -128,6 +128,6 @@ struct EventRow: View {
     }
 
     private var statusColor: Color {
-        event.startDate <= Date() ? .red : .blue
+        event.startDate <= Date() ? .red : .coral
     }
 }

@@ -22,7 +22,7 @@ struct CalendarEvent: Identifiable, Sendable {
         self.isAllDay = ekEvent.isAllDay
         self.location = ekEvent.location
         self.calendarTitle = ekEvent.calendar.title
-        self.calendarColor = Color(cgColor: ekEvent.calendar.cgColor)
+        self.calendarColor = .safeCalendarColor(ekEvent.calendar.cgColor)
     }
 }
 

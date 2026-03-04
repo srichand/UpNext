@@ -18,7 +18,7 @@ A lightweight macOS menu bar app that shows your next calendar meeting at a glan
 ## Build and Run
 
 ```bash
-xcodebuild -project UpNext.xcodeproj -scheme UpNext -configuration Debug build
+xcodebuild -project UpNext.xcodeproj -scheme UpNext -configuration Debug -derivedDataPath /tmp/UpNextDerived build
 open /tmp/UpNextDerived/Build/Products/Debug/UpNext.app
 ```
 

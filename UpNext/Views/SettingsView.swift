@@ -24,6 +24,7 @@ struct SettingsView: View {
                 }
         }
         .frame(minWidth: 380, minHeight: 420)
+        .tint(.coral)
     }
 
     // MARK: - Calendars Tab
@@ -45,7 +46,7 @@ struct SettingsView: View {
                                 Toggle(isOn: calendarBinding(for: calendar)) {
                                     HStack(spacing: 8) {
                                         Circle()
-                                            .fill(Color(cgColor: calendar.cgColor))
+                                            .fill(Color.safeCalendarColor(calendar.cgColor))
                                             .frame(width: 10, height: 10)
                                         Text(calendar.title)
                                     }
