@@ -4,7 +4,7 @@ import SwiftUI
 @MainActor
 final class MenuBarViewModel {
     let calendarManager: CalendarManager
-    private let nowProvider: () -> Date
+    private let nowProvider: @Sendable () -> Date
 
     /// Tick updated every 30 s to drive recomputation of relative times.
     var currentDate: Date
@@ -86,7 +86,7 @@ final class MenuBarViewModel {
         calendarManager: CalendarManager = CalendarManager(),
         startRefreshTimer: Bool = true,
         requestAccessOnInit: Bool = true,
-        nowProvider: @escaping () -> Date = Date.init
+        nowProvider: @escaping @Sendable () -> Date = Date.init
     ) {
         self.calendarManager = calendarManager
         self.nowProvider = nowProvider

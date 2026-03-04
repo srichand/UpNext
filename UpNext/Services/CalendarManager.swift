@@ -1,4 +1,4 @@
-import EventKit
+@preconcurrency import EventKit
 import SwiftUI
 
 @Observable

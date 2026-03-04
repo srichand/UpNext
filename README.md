@@ -1,5 +1,7 @@
 # UpNext
 
+[![Xcode - Build and Analyze](https://github.com/srichand/UpNext/actions/workflows/objective-c-xcode.yml/badge.svg)](https://github.com/srichand/UpNext/actions/workflows/objective-c-xcode.yml)
+
 Your next meeting, always one glance away. UpNext lives in your macOS menu bar and tells you what's coming up so you're never blindsided by a calendar invite again.
 
 <p align="center">
