@@ -46,23 +46,23 @@ enum MenuBarPreviewFactory {
             return [
                 makeEvent(
                     id: "active",
-                    title: "Daily Standup",
+                    title: "Heist Planning w/ Danny Ocean",
                     start: now.addingTimeInterval(-7 * 60),
                     end: now.addingTimeInterval(23 * 60),
-                    location: "Zoom",
+                    location: "The Bellagio",
                     color: .coral
                 ),
                 makeEvent(
                     id: "next-1",
-                    title: "Roadmap Planning",
+                    title: "Lightsaber Training",
                     start: now.addingTimeInterval(48 * 60),
                     end: now.addingTimeInterval(78 * 60),
-                    location: "Conf Room A",
+                    location: "Dagobah System",
                     color: .blue
                 ),
                 makeEvent(
                     id: "next-2",
-                    title: "1:1 with Alex",
+                    title: "1:1 with Gandalf",
                     start: now.addingTimeInterval((2 * 60 * 60) + (5 * 60)),
                     end: now.addingTimeInterval((2 * 60 * 60) + (35 * 60)),
                     location: nil,
@@ -73,26 +73,26 @@ enum MenuBarPreviewFactory {
             return [
                 makeEvent(
                     id: "soon",
-                    title: "Design Review",
+                    title: "Willy Wonka Factory Tour",
                     start: now.addingTimeInterval(12 * 60),
                     end: now.addingTimeInterval(42 * 60),
-                    location: "War Room",
+                    location: "Chocolate Room",
                     color: .mint
                 ),
                 makeEvent(
                     id: "later-1",
-                    title: "Sprint Retro",
+                    title: "Lunch That Could've Been a Slack",
                     start: now.addingTimeInterval((1 * 60 * 60) + (20 * 60)),
                     end: now.addingTimeInterval((2 * 60 * 60) + (5 * 60)),
-                    location: "Zoom",
+                    location: "Conference Room B",
                     color: .orange
                 ),
                 makeEvent(
                     id: "later-2",
-                    title: "Partner Sync",
+                    title: "Dinner at Gusteau's",
                     start: now.addingTimeInterval((3 * 60 * 60) + (10 * 60)),
                     end: now.addingTimeInterval((3 * 60 * 60) + (55 * 60)),
-                    location: "Huddle 3",
+                    location: "Paris, France",
                     color: .purple
                 )
             ]

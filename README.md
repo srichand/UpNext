@@ -1,14 +1,20 @@
 # UpNext
 
-A lightweight macOS menu bar app that shows your next calendar meeting at a glance.
+Your next meeting, always one glance away. UpNext lives in your macOS menu bar and tells you what's coming up so you're never blindsided by a calendar invite again.
+
+<p align="center">
+  <img src="artifacts/screenshots/popover-active-meeting-light.png" width="300" alt="Active meeting view" />
+  &nbsp;&nbsp;
+  <img src="artifacts/screenshots/popover-packed-day-light.png" width="300" alt="Packed day view" />
+</p>
 
 ## Features
 
-- Menu bar display of the next upcoming event
-- Relative countdowns like `in 12m` / `in 1h 5m`
-- Calendar filtering in Settings
-- Launch at Login toggle
-- Native SwiftUI + EventKit implementation
+- **Menu bar countdown** — see your next event and a live relative timer (`in 12m`, `in 1h 5m`, or `now`)
+- **Day navigation** — browse past and future days with quick prev/next controls
+- **Calendar filtering** — pick which calendars to monitor in Settings
+- **Launch at Login** — start automatically so you never miss a beat
+- **Zero dependencies** — pure SwiftUI + EventKit, no third-party libraries
 
 ## Requirements
 
