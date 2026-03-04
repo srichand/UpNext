@@ -9,24 +9,47 @@
 /* Begin PBXBuildFile section */
 		00380092D85819EB0F86FDAF /* MenuBarPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E2AF657961204F11E7A37B9 /* MenuBarPopover.swift */; };
 		2511615AA729A96B55563135 /* CalendarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260BC02D39D277A10C1BF439 /* CalendarManager.swift */; };
+		36570144600FAB19FA137C57 /* StringExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D46F0C27185A9E86E4F6D1 /* StringExtensionTests.swift */; };
+		3E95D6E414F3FCDDF3B2476A /* MenuBarViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD876A0AE60C85976DB2AFC5 /* MenuBarViewModelTests.swift */; };
+		5F5E4ED8CE585C5F26D770F5 /* MenuBarPopover+Previews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F085A312B200A3C6C1645A4 /* MenuBarPopover+Previews.swift */; };
 		72C0BDB5E2CD630390C6FD7E /* UpNextApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4622FF8AA10912132C9877 /* UpNextApp.swift */; };
 		72F55C43FFD9AE8A0758E592 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6F554DCBFA5DA64FE8F43FE /* SettingsView.swift */; };
 		7C10FE1EB86207621558F178 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 801A084FF0CF4242218ABD7C /* Assets.xcassets */; };
 		80B2C607EB889C43D482527B /* Color+Brand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F8080AE305B3B3ADB7A1968 /* Color+Brand.swift */; };
 		954F93A96C377F505CA7BFBA /* EventModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5C87AEDFEC5C4FCFA03ABD /* EventModel.swift */; };
+		B96995E58313C907FD7BD9CA /* ScreenshotGenerationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00835B511F426B56AEBFCED9 /* ScreenshotGenerationTests.swift */; };
+		D34B667C5F5049692709E724 /* CalendarManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D478FF5790CC88D5413F4B /* CalendarManagerTests.swift */; };
+		E14022F0C79B2F5D87CCBB70 /* MenuBarPreviewScenarios.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43CFA0231C406B8711DC4ABE /* MenuBarPreviewScenarios.swift */; };
 		FF937CCE83BE99B83A3A899D /* MenuBarViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D16033B219CA7D55237AF10B /* MenuBarViewModel.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		F12AD1984FF2E054D03106B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE5EDB827C540082068BDA99 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0E2C9D7A3B38CC0803C3E50D;
+			remoteInfo = UpNext;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		00835B511F426B56AEBFCED9 /* ScreenshotGenerationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotGenerationTests.swift; sourceTree = "<group>"; };
 		260BC02D39D277A10C1BF439 /* CalendarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarManager.swift; sourceTree = "<group>"; };
+		2F085A312B200A3C6C1645A4 /* MenuBarPopover+Previews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MenuBarPopover+Previews.swift"; sourceTree = "<group>"; };
+		43CFA0231C406B8711DC4ABE /* MenuBarPreviewScenarios.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarPreviewScenarios.swift; sourceTree = "<group>"; };
 		4B20C27F287355388CF92DCA /* UpNext.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = UpNext.entitlements; sourceTree = "<group>"; };
 		4F8080AE305B3B3ADB7A1968 /* Color+Brand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Brand.swift"; sourceTree = "<group>"; };
+		63D478FF5790CC88D5413F4B /* CalendarManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarManagerTests.swift; sourceTree = "<group>"; };
+		672FB5D2AF3642B434518EBA /* UpNextTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UpNextTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		801A084FF0CF4242218ABD7C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9E2AF657961204F11E7A37B9 /* MenuBarPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarPopover.swift; sourceTree = "<group>"; };
 		B6F554DCBFA5DA64FE8F43FE /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		BD876A0AE60C85976DB2AFC5 /* MenuBarViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarViewModelTests.swift; sourceTree = "<group>"; };
 		BF4622FF8AA10912132C9877 /* UpNextApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextApp.swift; sourceTree = "<group>"; };
 		C7D8EECCA285D1561DDFF1DD /* UpNext.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UpNext.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D16033B219CA7D55237AF10B /* MenuBarViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarViewModel.swift; sourceTree = "<group>"; };
+		F4D46F0C27185A9E86E4F6D1 /* StringExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionTests.swift; sourceTree = "<group>"; };
 		FA5C87AEDFEC5C4FCFA03ABD /* EventModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -35,6 +58,7 @@
 			isa = PBXGroup;
 			children = (
 				C7D8EECCA285D1561DDFF1DD /* UpNext.app */,
+				672FB5D2AF3642B434518EBA /* UpNextTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -51,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				9E2AF657961204F11E7A37B9 /* MenuBarPopover.swift */,
+				2F085A312B200A3C6C1645A4 /* MenuBarPopover+Previews.swift */,
 				B6F554DCBFA5DA64FE8F43FE /* SettingsView.swift */,
 			);
 			path = Views;
@@ -70,6 +95,7 @@
 				BF4622FF8AA10912132C9877 /* UpNextApp.swift */,
 				0ED0FAB9FA83C1A8C297DBB1 /* Extensions */,
 				ECB746894C6C3F9C1B755370 /* Models */,
+				B836B99BF12F83FB45B69557 /* PreviewSupport */,
 				BB1F61BF26578599EC2602B4 /* Resources */,
 				3AA109CCEBEEDA7313CABB8C /* Services */,
 				6F027BBD836DD1F19EEE968B /* ViewModels */,
@@ -84,6 +110,25 @@
 				D16033B219CA7D55237AF10B /* MenuBarViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		6F8B14BEEC9224227E128327 /* UpNextTests */ = {
+			isa = PBXGroup;
+			children = (
+				63D478FF5790CC88D5413F4B /* CalendarManagerTests.swift */,
+				BD876A0AE60C85976DB2AFC5 /* MenuBarViewModelTests.swift */,
+				00835B511F426B56AEBFCED9 /* ScreenshotGenerationTests.swift */,
+				F4D46F0C27185A9E86E4F6D1 /* StringExtensionTests.swift */,
+			);
+			path = UpNextTests;
+			sourceTree = "<group>";
+		};
+		B836B99BF12F83FB45B69557 /* PreviewSupport */ = {
+			isa = PBXGroup;
+			children = (
+				43CFA0231C406B8711DC4ABE /* MenuBarPreviewScenarios.swift */,
+			);
+			path = PreviewSupport;
 			sourceTree = "<group>";
 		};
 		BB1F61BF26578599EC2602B4 /* Resources */ = {
@@ -107,6 +152,7 @@
 			isa = PBXGroup;
 			children = (
 				4184886028EEB2175FCD6ACC /* UpNext */,
+				6F8B14BEEC9224227E128327 /* UpNextTests */,
 				046683BC126B730A854DB9C5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -131,6 +177,24 @@
 			productName = UpNext;
 			productReference = C7D8EECCA285D1561DDFF1DD /* UpNext.app */;
 			productType = "com.apple.product-type.application";
+		};
+		36CE21AF7035480676BCFD9D /* UpNextTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 70E9813DADB1460E83EB4902 /* Build configuration list for PBXNativeTarget "UpNextTests" */;
+			buildPhases = (
+				316076E0F7775EC80E2E36D7 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A42DA3ABBBEFC0CDFD296BF2 /* PBXTargetDependency */,
+			);
+			name = UpNextTests;
+			packageProductDependencies = (
+			);
+			productName = UpNextTests;
+			productReference = 672FB5D2AF3642B434518EBA /* UpNextTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -161,6 +225,7 @@
 			projectRoot = "";
 			targets = (
 				0E2C9D7A3B38CC0803C3E50D /* UpNext */,
+				36CE21AF7035480676BCFD9D /* UpNextTests */,
 			);
 		};
 /* End PBXProject section */
@@ -177,6 +242,17 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		316076E0F7775EC80E2E36D7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D34B667C5F5049692709E724 /* CalendarManagerTests.swift in Sources */,
+				3E95D6E414F3FCDDF3B2476A /* MenuBarViewModelTests.swift in Sources */,
+				B96995E58313C907FD7BD9CA /* ScreenshotGenerationTests.swift in Sources */,
+				36570144600FAB19FA137C57 /* StringExtensionTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C5DD2E54C7E5C038DED521DA /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -184,7 +260,9 @@
 				2511615AA729A96B55563135 /* CalendarManager.swift in Sources */,
 				80B2C607EB889C43D482527B /* Color+Brand.swift in Sources */,
 				954F93A96C377F505CA7BFBA /* EventModel.swift in Sources */,
+				5F5E4ED8CE585C5F26D770F5 /* MenuBarPopover+Previews.swift in Sources */,
 				00380092D85819EB0F86FDAF /* MenuBarPopover.swift in Sources */,
+				E14022F0C79B2F5D87CCBB70 /* MenuBarPreviewScenarios.swift in Sources */,
 				FF937CCE83BE99B83A3A899D /* MenuBarViewModel.swift in Sources */,
 				72F55C43FFD9AE8A0758E592 /* SettingsView.swift in Sources */,
 				72C0BDB5E2CD630390C6FD7E /* UpNextApp.swift in Sources */,
@@ -192,6 +270,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A42DA3ABBBEFC0CDFD296BF2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0E2C9D7A3B38CC0803C3E50D /* UpNext */;
+			targetProxy = F12AD1984FF2E054D03106B5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		06D59E609097F17099D5B255 /* Release */ = {
@@ -363,6 +449,40 @@
 			};
 			name = Debug;
 		};
+		7EB08C2BE98256CFCC210E3B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.srichand.UpNextTests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/UpNext.app/Contents/MacOS/UpNext";
+			};
+			name = Debug;
+		};
+		8F1C34E489C6AAADD7D27658 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.srichand.UpNextTests;
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/UpNext.app/Contents/MacOS/UpNext";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -371,6 +491,15 @@
 			buildConfigurations = (
 				67EF0B7A5B75238F852458D7 /* Debug */,
 				06D59E609097F17099D5B255 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		70E9813DADB1460E83EB4902 /* Build configuration list for PBXNativeTarget "UpNextTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7EB08C2BE98256CFCC210E3B /* Debug */,
+				8F1C34E489C6AAADD7D27658 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

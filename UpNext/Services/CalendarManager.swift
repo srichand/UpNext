@@ -4,6 +4,8 @@ import SwiftUI
 @Observable
 @MainActor
 final class CalendarManager {
+    static let selectedCalendarIDsDefaultsKey = "selectedCalendarIDs"
+
     private let eventStore = EKEventStore()
 
     var events: [CalendarEvent] = []
@@ -12,7 +14,10 @@ final class CalendarManager {
 
     var selectedCalendarIDs: Set<String> {
         didSet {
-            UserDefaults.standard.set(Array(selectedCalendarIDs), forKey: "selectedCalendarIDs")
+            UserDefaults.standard.set(
+                Array(selectedCalendarIDs),
+                forKey: Self.selectedCalendarIDsDefaultsKey
+            )
             fetchEvents()
         }
     }
@@ -20,8 +25,13 @@ final class CalendarManager {
     private var hasLoadedInitialSelection: Bool
     private var observerToken: Any?
 
-    init() {
-        if let saved = UserDefaults.standard.stringArray(forKey: "selectedCalendarIDs") {
+    init(
+        startNotificationObserver: Bool = true,
+        startPeriodicRefresh: Bool = true
+    ) {
+        if let saved = UserDefaults.standard.stringArray(
+            forKey: Self.selectedCalendarIDsDefaultsKey
+        ) {
             self.selectedCalendarIDs = Set(saved)
             self.hasLoadedInitialSelection = true
         } else {
@@ -29,8 +39,12 @@ final class CalendarManager {
             self.hasLoadedInitialSelection = false
         }
 
-        setupNotificationObserver()
-        setupPeriodicFetch()
+        if startNotificationObserver {
+            setupNotificationObserver()
+        }
+        if startPeriodicRefresh {
+            setupPeriodicFetch()
+        }
     }
 
     // MARK: - Access
@@ -84,6 +98,27 @@ final class CalendarManager {
         let ekEvents = eventStore.events(matching: predicate)
 
         events = ekEvents
+            .filter { !$0.isAllDay }
+            .filter { selectedCalendarIDs.contains($0.calendar.calendarIdentifier) }
+            .map { CalendarEvent(from: $0) }
+            .sorted { $0.startDate < $1.startDate }
+    }
+
+    /// Returns events for the given date without mutating stored state.
+    func eventsForDate(_ date: Date) -> [CalendarEvent] {
+        let cal = Calendar.current
+        let startOfDay = cal.startOfDay(for: date)
+        guard let endOfDay = cal.date(byAdding: .day, value: 1, to: startOfDay) else { return [] }
+
+        let predicate = eventStore.predicateForEvents(
+            withStart: startOfDay,
+            end: endOfDay,
+            calendars: nil
+        )
+
+        let ekEvents = eventStore.events(matching: predicate)
+
+        return ekEvents
             .filter { !$0.isAllDay }
             .filter { selectedCalendarIDs.contains($0.calendar.calendarIdentifier) }
             .map { CalendarEvent(from: $0) }

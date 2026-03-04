@@ -24,6 +24,26 @@ struct CalendarEvent: Identifiable, Sendable {
         self.calendarTitle = ekEvent.calendar.title
         self.calendarColor = .safeCalendarColor(ekEvent.calendar.cgColor)
     }
+
+    init(
+        id: String = UUID().uuidString,
+        title: String,
+        startDate: Date,
+        endDate: Date,
+        isAllDay: Bool = false,
+        location: String? = nil,
+        calendarTitle: String = "Calendar",
+        calendarColor: Color = .secondary
+    ) {
+        self.id = id
+        self.title = title
+        self.startDate = startDate
+        self.endDate = endDate
+        self.isAllDay = isAllDay
+        self.location = location
+        self.calendarTitle = calendarTitle
+        self.calendarColor = calendarColor
+    }
 }
 
 extension String {

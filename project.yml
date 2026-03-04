@@ -34,3 +34,15 @@ targets:
         ENABLE_HARDENED_RUNTIME: true
         SWIFT_STRICT_CONCURRENCY: complete
         CODE_SIGN_STYLE: Automatic
+
+  UpNextTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: UpNextTests
+    dependencies:
+      - target: UpNext
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.srichand.UpNextTests
+        GENERATE_INFOPLIST_FILE: true

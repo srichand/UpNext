@@ -28,6 +28,20 @@ Or open the project in Xcode:
 open UpNext.xcodeproj
 ```
 
+## Automated Screenshots
+
+Generate deterministic SwiftUI screenshots (seeded data, no Calendar permission prompts):
+
+```bash
+./scripts/capture-screenshots.sh
+```
+
+Optional output directory:
+
+```bash
+./scripts/capture-screenshots.sh /tmp/UpNextScreenshots
+```
+
 ## Permissions
 
 UpNext requests Calendar access to read your events and show upcoming meetings.

@@ -6,7 +6,11 @@ struct MenuBarPopover: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            if viewModel.upcomingEvents.isEmpty {
+            dateNavigationHeader
+
+            Divider()
+
+            if viewModel.selectedDateEvents.isEmpty {
                 emptyState
             } else {
                 eventList
@@ -16,16 +20,64 @@ struct MenuBarPopover: View {
             footerButtons
         }
         .frame(width: 300)
+        .onDisappear {
+            viewModel.resetToToday()
+        }
     }
 
     // MARK: - Subviews
+
+    private var dateNavigationHeader: some View {
+        HStack {
+            Button(action: viewModel.goToPreviousDay) {
+                Image(systemName: "chevron.left")
+                    .font(.body.weight(.semibold))
+                    .frame(width: 28, height: 28)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+
+            Spacer()
+
+            VStack(spacing: 4) {
+                Text(viewModel.selectedDateHeaderString)
+                    .font(.headline)
+
+                if !viewModel.isSelectedDateToday {
+                    Button {
+                        viewModel.goToToday()
+                    } label: {
+                        Text("Today")
+                            .font(.caption)
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 2)
+                            .background(Color.coral, in: Capsule())
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+
+            Spacer()
+
+            Button(action: viewModel.goToNextDay) {
+                Image(systemName: "chevron.right")
+                    .font(.body.weight(.semibold))
+                    .frame(width: 28, height: 28)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+    }
 
     private var emptyState: some View {
         VStack(spacing: 8) {
             Image(systemName: "calendar.badge.checkmark")
                 .font(.system(size: 32))
                 .foregroundStyle(.secondary)
-            Text("No more meetings today")
+            Text(viewModel.emptyStateText)
                 .font(.headline)
                 .foregroundStyle(.secondary)
         }
@@ -35,10 +87,10 @@ struct MenuBarPopover: View {
 
     private var eventList: some View {
         VStack(alignment: .leading, spacing: 0) {
-            ForEach(Array(viewModel.upcomingEvents.enumerated()), id: \.element.id) { index, event in
+            ForEach(Array(viewModel.selectedDateEvents.enumerated()), id: \.element.id) { index, event in
                 EventRow(event: event, viewModel: viewModel)
 
-                if index < viewModel.upcomingEvents.count - 1 {
+                if index < viewModel.selectedDateEvents.count - 1 {
                     Divider()
                         .padding(.horizontal, 12)
                 }
@@ -106,7 +158,7 @@ struct EventRow: View {
 
             Spacer()
 
-            if event.id == viewModel.nextEvent?.id {
+            if viewModel.isSelectedDateToday, event.id == viewModel.nextEvent?.id {
                 Text(statusLabel)
                     .font(.caption)
                     .fontWeight(.medium)
@@ -121,13 +173,17 @@ struct EventRow: View {
     }
 
     private var statusLabel: String {
-        if event.startDate <= Date() {
+        if isCurrentEvent {
             return "Now"
         }
         return "in \(viewModel.relativeTimeString(for: event.startDate))"
     }
 
     private var statusColor: Color {
-        event.startDate <= Date() ? .red : .coral
+        isCurrentEvent ? .red : .coral
+    }
+
+    private var isCurrentEvent: Bool {
+        event.startDate <= viewModel.currentDate
     }
 }
