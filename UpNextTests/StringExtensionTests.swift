@@ -13,4 +13,12 @@ final class StringExtensionTests: XCTestCase {
     func testTruncatedAddsEllipsisWhenOverLimit() {
         XCTAssertEqual("123456".truncated(to: 5), "1234…")
     }
+
+    func testTruncatedReturnsEmptyStringWhenLimitIsZero() {
+        XCTAssertEqual("123456".truncated(to: 0), "")
+    }
+
+    func testTruncatedReturnsEmptyStringWhenLimitIsNegative() {
+        XCTAssertEqual("123456".truncated(to: -1), "")
+    }
 }

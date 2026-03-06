@@ -48,6 +48,7 @@ struct CalendarEvent: Identifiable, Sendable {
 
 extension String {
     func truncated(to maxLength: Int) -> String {
+        guard maxLength > 0 else { return "" }
         if count <= maxLength { return self }
         return String(prefix(maxLength - 1)) + "\u{2026}"
     }
