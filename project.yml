@@ -11,6 +11,16 @@ settings:
     SWIFT_VERSION: "6.0"
     MACOSX_DEPLOYMENT_TARGET: "14.0"
 
+schemes:
+  UpNext:
+    shared: true
+    build:
+      targets:
+        UpNext: all
+    test:
+      targets:
+        - UpNextTests
+
 targets:
   UpNext:
     type: application
@@ -35,14 +45,32 @@ targets:
         SWIFT_STRICT_CONCURRENCY: complete
         CODE_SIGN_STYLE: Automatic
 
+  UpNextCore:
+    type: framework
+    platform: macOS
+    sources:
+      - path: UpNext
+        excludes:
+          - Resources
+          - UpNextApp.swift
+    settings:
+      base:
+        INFOPLIST_FILE: ""
+        PRODUCT_BUNDLE_IDENTIFIER: com.srichand.UpNextCore
+        PRODUCT_NAME: UpNextCore
+        GENERATE_INFOPLIST_FILE: true
+        SWIFT_STRICT_CONCURRENCY: complete
+
   UpNextTests:
     type: bundle.unit-test
     platform: macOS
     sources:
       - path: UpNextTests
     dependencies:
-      - target: UpNext
+      - target: UpNextCore
     settings:
       base:
+        BUNDLE_LOADER: ""
         PRODUCT_BUNDLE_IDENTIFIER: com.srichand.UpNextTests
         GENERATE_INFOPLIST_FILE: true
+        TEST_HOST: ""

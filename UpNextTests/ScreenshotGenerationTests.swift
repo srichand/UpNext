@@ -2,7 +2,7 @@ import AppKit
 import SwiftUI
 import UniformTypeIdentifiers
 import XCTest
-@testable import UpNext
+@testable import UpNextCore
 
 @MainActor
 final class ScreenshotGenerationTests: XCTestCase {

@@ -1,5 +1,5 @@
 import XCTest
-@testable import UpNext
+@testable import UpNextCore
 
 final class MenuBarViewModelTests: XCTestCase {
     @MainActor
