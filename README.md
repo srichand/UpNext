@@ -1,6 +1,7 @@
 # UpNext
 
 [![Xcode - Build and Analyze](https://github.com/srichand/UpNext/actions/workflows/objective-c-xcode.yml/badge.svg)](https://github.com/srichand/UpNext/actions/workflows/objective-c-xcode.yml)
+[![Swift](https://github.com/srichand/UpNext/actions/workflows/swift.yml/badge.svg)](https://github.com/srichand/UpNext/actions/workflows/swift.yml)
 
 Your next meeting, always one glance away. UpNext lives in your macOS menu bar and tells you what's coming up so you're never blindsided by a calendar invite again.
 
@@ -34,6 +35,20 @@ Or open the project in Xcode:
 
 ```bash
 open UpNext.xcodeproj
+```
+
+## Testing
+
+Run the full app and UI-facing test suite with Xcode:
+
+```bash
+xcodebuild -project UpNext.xcodeproj -scheme UpNext -configuration Debug -derivedDataPath /tmp/UpNextDerived test
+```
+
+Run the shared `UpNextCore` package tests with SwiftPM:
+
+```bash
+swift test --scratch-path /tmp/UpNextSwiftPM
 ```
 
 ## Automated Screenshots
