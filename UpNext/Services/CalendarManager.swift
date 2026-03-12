@@ -7,10 +7,12 @@ final class CalendarManager {
     static let selectedCalendarIDsDefaultsKey = "selectedCalendarIDs"
 
     private let eventStore = EKEventStore()
+    private let authorizationStatusProvider: @Sendable () -> EKAuthorizationStatus
+    private let shouldStartPeriodicRefresh: Bool
 
     var events: [CalendarEvent] = []
     var availableCalendars: [EKCalendar] = []
-    var authorizationStatus: EKAuthorizationStatus = .notDetermined
+    var authorizationStatus: EKAuthorizationStatus
 
     var selectedCalendarIDs: Set<String> {
         didSet {
@@ -23,12 +25,26 @@ final class CalendarManager {
     }
 
     private var hasLoadedInitialSelection: Bool
-    private var observerToken: Any?
+    @ObservationIgnored
+    nonisolated(unsafe) private var observerToken: Any?
+    @ObservationIgnored
+    nonisolated(unsafe) private var periodicFetchTimer: Timer?
+
+    var isPeriodicRefreshScheduled: Bool {
+        periodicFetchTimer != nil
+    }
 
     init(
         startNotificationObserver: Bool = true,
-        startPeriodicRefresh: Bool = true
+        startPeriodicRefresh: Bool = true,
+        authorizationStatusProvider: @escaping @Sendable () -> EKAuthorizationStatus = {
+            EKEventStore.authorizationStatus(for: .event)
+        }
     ) {
+        self.authorizationStatusProvider = authorizationStatusProvider
+        self.shouldStartPeriodicRefresh = startPeriodicRefresh
+        self.authorizationStatus = authorizationStatusProvider()
+
         if let saved = UserDefaults.standard.stringArray(
             forKey: Self.selectedCalendarIDsDefaultsKey
         ) {
@@ -42,29 +58,46 @@ final class CalendarManager {
         if startNotificationObserver {
             setupNotificationObserver()
         }
-        if startPeriodicRefresh {
-            setupPeriodicFetch()
+        setupPeriodicFetchIfNeeded()
+    }
+
+    deinit {
+        if let observerToken {
+            NotificationCenter.default.removeObserver(observerToken)
         }
+        periodicFetchTimer?.invalidate()
     }
 
     // MARK: - Access
 
     func requestAccess() async {
         do {
-            let granted = try await eventStore.requestFullAccessToEvents()
-            authorizationStatus = EKEventStore.authorizationStatus(for: .event)
-            if granted {
-                loadCalendars()
-                fetchEvents()
-            }
+            _ = try await eventStore.requestFullAccessToEvents()
         } catch {
-            authorizationStatus = EKEventStore.authorizationStatus(for: .event)
+            // Fall through and refresh authorization state below.
         }
+
+        refreshAuthorizationStatus()
+
+        guard hasCalendarReadAccess else {
+            clearCachedCalendarData()
+            return
+        }
+
+        loadCalendars()
+        fetchEvents()
     }
 
     // MARK: - Calendars
 
     func loadCalendars() {
+        refreshAuthorizationStatus()
+
+        guard hasCalendarReadAccess else {
+            clearCachedCalendarData()
+            return
+        }
+
         availableCalendars = eventStore.calendars(for: .event)
             .sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
 
@@ -85,6 +118,13 @@ final class CalendarManager {
     // MARK: - Events
 
     func fetchEvents() {
+        refreshAuthorizationStatus()
+
+        guard hasCalendarReadAccess else {
+            events = []
+            return
+        }
+
         let cal = Calendar.current
         let startOfDay = cal.startOfDay(for: Date())
         guard let endOfDay = cal.date(byAdding: .day, value: 1, to: startOfDay) else { return }
@@ -106,6 +146,12 @@ final class CalendarManager {
 
     /// Returns events for the given date without mutating stored state.
     func eventsForDate(_ date: Date) -> [CalendarEvent] {
+        refreshAuthorizationStatus()
+
+        guard hasCalendarReadAccess else {
+            return []
+        }
+
         let cal = Calendar.current
         let startOfDay = cal.startOfDay(for: date)
         guard let endOfDay = cal.date(byAdding: .day, value: 1, to: startOfDay) else { return [] }
@@ -134,18 +180,57 @@ final class CalendarManager {
             queue: .main
         ) { [weak self] _ in
             Task { @MainActor [weak self] in
-                self?.loadCalendars()
+                self?.handleEventStoreChange()
+            }
+        }
+    }
+
+    private func setupPeriodicFetchIfNeeded() {
+        guard shouldStartPeriodicRefresh else { return }
+        guard hasCalendarReadAccess else { return }
+        guard periodicFetchTimer == nil else { return }
+
+        // Re-fetch every 5 minutes as a safety net alongside the notification observer
+        periodicFetchTimer = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { [weak self] _ in
+            Task { @MainActor [weak self] in
                 self?.fetchEvents()
             }
         }
     }
 
-    private func setupPeriodicFetch() {
-        // Re-fetch every 5 minutes as a safety net alongside the notification observer
-        Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { [weak self] _ in
-            Task { @MainActor [weak self] in
-                self?.fetchEvents()
-            }
+    private func stopPeriodicFetch() {
+        periodicFetchTimer?.invalidate()
+        periodicFetchTimer = nil
+    }
+
+    private func handleEventStoreChange() {
+        refreshAuthorizationStatus()
+
+        guard hasCalendarReadAccess else {
+            clearCachedCalendarData()
+            return
         }
+
+        loadCalendars()
+        fetchEvents()
+    }
+
+    private func refreshAuthorizationStatus() {
+        authorizationStatus = authorizationStatusProvider()
+
+        if hasCalendarReadAccess {
+            setupPeriodicFetchIfNeeded()
+        } else {
+            stopPeriodicFetch()
+        }
+    }
+
+    private var hasCalendarReadAccess: Bool {
+        authorizationStatus == .fullAccess
+    }
+
+    private func clearCachedCalendarData() {
+        availableCalendars = []
+        events = []
     }
 }
