@@ -1,3 +1,4 @@
+import EventKit
 import XCTest
 @testable import UpNextCore
 
@@ -54,5 +55,62 @@ final class CalendarManagerTests: XCTestCase {
             ) ?? []
         )
         XCTAssertEqual(storedIDs, Set(["team-calendar", "personal-calendar"]))
+    }
+
+    @MainActor
+    func testInitDoesNotSchedulePeriodicRefreshWithoutCalendarAccess() {
+        let manager = CalendarManager(
+            startNotificationObserver: false,
+            startPeriodicRefresh: true,
+            authorizationStatusProvider: { .denied }
+        )
+
+        XCTAssertFalse(manager.isPeriodicRefreshScheduled)
+    }
+
+    @MainActor
+    func testFetchEventsClearsCachedEventsAndStopsPeriodicRefreshWhenAccessIsRevoked() {
+        let status = AuthorizationStatusBox(.fullAccess)
+        var manager: CalendarManager? = CalendarManager(
+            startNotificationObserver: false,
+            startPeriodicRefresh: true,
+            authorizationStatusProvider: { status.value }
+        )
+
+        XCTAssertTrue(manager?.isPeriodicRefreshScheduled == true)
+
+        manager?.events = [
+            makeEvent(
+                id: "revoked-access",
+                title: "Planning",
+                start: Date(timeIntervalSince1970: 1_700_000_000),
+                end: Date(timeIntervalSince1970: 1_700_000_000 + 1_800)
+            )
+        ]
+
+        status.value = .denied
+        manager?.fetchEvents()
+
+        XCTAssertTrue(manager?.events.isEmpty == true)
+        XCTAssertFalse(manager?.isPeriodicRefreshScheduled == true)
+
+        manager = nil
+    }
+
+    private func makeEvent(id: String, title: String, start: Date, end: Date) -> CalendarEvent {
+        CalendarEvent(
+            id: id,
+            title: title,
+            startDate: start,
+            endDate: end
+        )
+    }
+}
+
+private final class AuthorizationStatusBox: @unchecked Sendable {
+    var value: EKAuthorizationStatus
+
+    init(_ value: EKAuthorizationStatus) {
+        self.value = value
     }
 }
