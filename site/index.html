@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f5f1">
+    <meta name="description" content="UpNext is a private, native macOS menu bar app that keeps your next meeting one glance away.">
+    <meta property="og:title" content="UpNext for macOS">
+    <meta property="og:description" content="Your next meeting, always one glance away.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/popover-active-meeting-light.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>UpNext — Your next meeting, one glance away</title>
+    <link rel="icon" href="assets/app-icon.png">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <nav class="nav shell" aria-label="Primary navigation">
+      <a class="brand" href="#top" aria-label="UpNext home">
+        <img src="assets/app-icon.png" alt="" width="38" height="38">
+        <span>UpNext</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#privacy">Privacy</a>
+        <a href="https://github.com/srichand/UpNext">GitHub</a>
+      </div>
+    </nav>
+
+    <main id="top">
+      <section class="hero shell">
+        <div class="hero-copy">
+          <p class="eyebrow">Made for the Mac</p>
+          <h1>Your next meeting,<br><span>one glance away.</span></h1>
+          <p class="lede">UpNext lives quietly in your menu bar and keeps the meeting that matters now within reach—without turning your calendar into another dashboard.</p>
+          <div class="hero-actions">
+            <a class="button primary" href="https://github.com/srichand/UpNext/releases/latest">Download for macOS</a>
+            <a class="button secondary" href="#install">Install with Homebrew</a>
+          </div>
+          <p class="requirement">Requires macOS 15 Sequoia or later · Free and open source</p>
+        </div>
+
+        <div class="hero-visual" aria-label="UpNext menu bar popover preview">
+          <div class="menu-bar-demo">
+            <span class="menu-spacer"></span>
+            <span class="menu-item">UpNext · Heist Planning in 48m</span>
+          </div>
+          <div class="popover-frame">
+            <img src="assets/popover-active-meeting-light.png" alt="UpNext showing an active meeting and the rest of the day's schedule">
+          </div>
+          <div class="soft-glow"></div>
+        </div>
+      </section>
+
+      <section id="features" class="features shell">
+        <article>
+          <div class="feature-icon coral">◷</div>
+          <h2>Glanceable by design</h2>
+          <p>See what’s next, when it starts, and whether you’re already in it—without opening Calendar.</p>
+        </article>
+        <article>
+          <div class="feature-icon blue">⌘</div>
+          <h2>At home on the Mac</h2>
+          <p>Native controls, keyboard navigation, system settings, launch at login, and thoughtful light and dark appearances.</p>
+        </article>
+        <article>
+          <div class="feature-icon green">⌾</div>
+          <h2>Private by default</h2>
+          <p>Your calendar stays on your Mac. No accounts, analytics, ads, tracking, telemetry, or cloud service.</p>
+        </article>
+      </section>
+
+      <section class="showcase shell">
+        <div class="showcase-copy">
+          <p class="eyebrow">The right amount of detail</p>
+          <h2>A little utility you’ll use all day.</h2>
+          <p>Browse nearby days, choose exactly which calendars matter, and let UpNext start with your Mac. When an update is ready, it appears gently in the same place.</p>
+          <ul>
+            <li>Live countdowns for upcoming meetings</li>
+            <li>Clear active, imminent, and later states</li>
+            <li>Calendar filtering and day navigation</li>
+            <li>Signed, notarized automatic updates</li>
+          </ul>
+        </div>
+        <div class="dark-card">
+          <div class="dark-titlebar"><span></span><span></span><span></span></div>
+          <img src="assets/popover-active-meeting-dark.png" alt="UpNext popover in dark mode">
+        </div>
+      </section>
+
+      <section id="privacy" class="privacy shell">
+        <div class="privacy-mark">⌂</div>
+        <div>
+          <p class="eyebrow">Private means local</p>
+          <h2>Your meetings are none of our business.</h2>
+          <p>UpNext reads calendar events through macOS EventKit and processes them entirely on your Mac. Network access is used only to retrieve signed software updates from GitHub.</p>
+          <a href="https://github.com/srichand/UpNext/blob/main/PRIVACY.md">Read the privacy policy →</a>
+        </div>
+      </section>
+
+      <section id="install" class="install shell">
+        <img src="assets/app-icon.png" alt="UpNext app icon" width="96" height="96">
+        <p class="eyebrow">Ready when you are</p>
+        <h2>Put your next meeting in the menu bar.</h2>
+        <div class="command" role="group" aria-label="Homebrew install command">
+          <code>brew install --cask srichand/tap/upnext</code>
+          <button type="button" data-copy="brew install --cask srichand/tap/upnext">Copy</button>
+        </div>
+        <p>Or <a href="https://github.com/srichand/UpNext/releases/latest">download the latest notarized release</a>.</p>
+      </section>
+    </main>
+
+    <footer class="footer shell">
+      <span>UpNext for macOS</span>
+      <div>
+        <a href="https://github.com/srichand/UpNext">Source</a>
+        <a href="https://github.com/srichand/UpNext/issues">Support</a>
+        <a href="https://github.com/srichand/UpNext/blob/main/LICENSE">MIT License</a>
+      </div>
+    </footer>
+
+    <script>
+      const copyButton = document.querySelector("[data-copy]");
+      copyButton?.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(copyButton.dataset.copy);
+        copyButton.textContent = "Copied";
+        window.setTimeout(() => { copyButton.textContent = "Copy"; }, 1600);
+      });
+    </script>
+  </body>
+</html>
