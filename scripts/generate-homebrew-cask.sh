@@ -30,11 +30,11 @@ cask "upnext" do
 
   url "https://github.com/srichand/UpNext/releases/download/v#{version}/UpNext-#{version}.zip"
   name "UpNext"
-  desc "Shows the next calendar meeting in the macOS menu bar"
+  desc "Shows the next calendar meeting in the menu bar"
   homepage "https://github.com/srichand/UpNext"
 
   auto_updates true
-  depends_on macos: ">= :sonoma"
+  depends_on macos: :sonoma
 
   app "UpNext.app"
 
