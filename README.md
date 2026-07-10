@@ -3,6 +3,8 @@
 [![Xcode - Build and Analyze](https://github.com/srichand/UpNext/actions/workflows/objective-c-xcode.yml/badge.svg)](https://github.com/srichand/UpNext/actions/workflows/objective-c-xcode.yml)
 [![Swift](https://github.com/srichand/UpNext/actions/workflows/swift.yml/badge.svg)](https://github.com/srichand/UpNext/actions/workflows/swift.yml)
 
+[Website](https://srichand.github.io/UpNext/) · [Latest release](https://github.com/srichand/UpNext/releases/latest)
+
 Your next meeting, always one glance away. UpNext lives in your macOS menu bar and tells you what's coming up so you're never blindsided by a calendar invite again.
 
 <p align="center">
