@@ -7,6 +7,15 @@ SCHEME="UpNext"
 DERIVED_DATA_PATH="/tmp/UpNextRelease"
 BUILT_APP_PATH="$DERIVED_DATA_PATH/Build/Products/Release/UpNext.app"
 TARGET_APP_PATH="$HOME/Applications/UpNext.app"
+BUILD_SETTINGS=()
+
+if [[ -n "${SPARKLE_PUBLIC_ED_KEY:-}" ]]; then
+  BUILD_SETTINGS+=("SPARKLE_PUBLIC_ED_KEY=$SPARKLE_PUBLIC_ED_KEY")
+fi
+
+if [[ -n "${SPARKLE_FEED_URL:-}" ]]; then
+  BUILD_SETTINGS+=("SPARKLE_FEED_URL=$SPARKLE_FEED_URL")
+fi
 
 if [[ ! -d "$PROJECT_PATH" ]]; then
   echo "Project not found at $PROJECT_PATH" >&2
@@ -19,7 +28,8 @@ xcodebuild \
   -scheme "$SCHEME" \
   -configuration Release \
   -derivedDataPath "$DERIVED_DATA_PATH" \
-  clean build
+  clean build \
+  "${BUILD_SETTINGS[@]}"
 
 echo "Installing to $TARGET_APP_PATH..."
 mkdir -p "$HOME/Applications"
