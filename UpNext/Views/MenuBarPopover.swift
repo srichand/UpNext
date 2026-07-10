@@ -13,7 +13,9 @@ struct MenuBarPopover: View {
 
             Divider()
 
-            if selectedDateEvents.isEmpty {
+            if viewModel.needsCalendarAccess {
+                calendarAccessState
+            } else if selectedDateEvents.isEmpty {
                 emptyState
             } else {
                 eventList(selectedDateEvents)
@@ -88,6 +90,37 @@ struct MenuBarPopover: View {
         .padding(.vertical, 24)
     }
 
+    private var calendarAccessState: some View {
+        VStack(spacing: 10) {
+            Image(systemName: "calendar.badge.exclamationmark")
+                .font(.system(size: 32))
+                .foregroundStyle(.secondary)
+
+            Text("Calendar access required")
+                .font(.headline)
+
+            Text("Allow UpNext to read your calendars in System Settings.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+
+            Button {
+                openSettings()
+            } label: {
+                Text("Open UpNext Settings…")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 5)
+                    .background(Color.coral, in: Capsule())
+            }
+            .buttonStyle(.plain)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 24)
+        .padding(.vertical, 20)
+    }
+
     private func eventList(_ selectedDateEvents: [CalendarEvent]) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             ForEach(Array(selectedDateEvents.enumerated()), id: \.element.id) { index, event in
@@ -105,8 +138,7 @@ struct MenuBarPopover: View {
     private var footerButtons: some View {
         HStack {
             Button {
-                openWindow(id: "settings")
-                NSApplication.shared.activate(ignoringOtherApps: true)
+                openSettings()
             } label: {
                 Label("Settings\u{2026}", systemImage: "gearshape")
             }
@@ -126,6 +158,11 @@ struct MenuBarPopover: View {
         .font(.caption)
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
+    }
+
+    private func openSettings() {
+        openWindow(id: "settings")
+        NSApplication.shared.activate(ignoringOtherApps: true)
     }
 }
 

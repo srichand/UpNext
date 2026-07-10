@@ -24,6 +24,16 @@ Your next meeting, always one glance away. UpNext lives in your macOS menu bar a
 - macOS 14.0+
 - Xcode 16+
 
+## Install
+
+Install the latest notarized release with Homebrew:
+
+```bash
+brew install --cask srichand/tap/upnext
+```
+
+Or download `UpNext-1.0.0.zip` from the [latest GitHub release](https://github.com/srichand/UpNext/releases/latest), move `UpNext.app` to Applications, and launch it. UpNext checks for signed updates automatically.
+
 ## Build and Run
 
 ```bash
@@ -67,7 +77,7 @@ Optional output directory:
 
 ## Permissions
 
-UpNext requests Calendar access to read your events and show upcoming meetings.
+UpNext requests Calendar access to read your events and show upcoming meetings. Calendar data stays on your Mac; see the [privacy policy](PRIVACY.md) for details.
 
 ## App Updates
 
@@ -127,12 +137,20 @@ Upload these flat assets to the `v1.0.0` GitHub release:
 - `appcast.xml` — signed update feed
 - `upnext.rb` — generated Homebrew Cask definition
 
-## Homebrew
-
-The generated Cask declares `auto_updates true`, so Homebrew installs the notarized app and Sparkle keeps it current afterward. Publish `upnext.rb` at `Casks/upnext.rb` in a `pendyala/homebrew-tap` repository. Users can then install with:
+For a guarded end-to-end release, commit and push a clean `main`, add the versioned release notes, then run:
 
 ```bash
-brew install --cask pendyala/tap/upnext
+./scripts/publish-release.sh
+```
+
+The script runs both test suites, builds and notarizes the exact commit, generates the signed feed and Cask, pushes the version tag, and creates a draft GitHub release for final validation.
+
+## Homebrew
+
+The generated Cask declares `auto_updates true`, so Homebrew installs the notarized app and Sparkle keeps it current afterward. Publish `upnext.rb` at `Casks/upnext.rb` in the `srichand/homebrew-tap` repository. Users can then install with:
+
+```bash
+brew install --cask srichand/tap/upnext
 ```
 
 Once UpNext meets Homebrew's notability requirements, the same Cask can be proposed to `Homebrew/homebrew-cask` for the shorter command:
@@ -141,7 +159,7 @@ Once UpNext meets Homebrew's notability requirements, the same Cask can be propo
 brew install --cask upnext
 ```
 
-For a local, non-distributable Release install, continue using:
+For a local Developer ID-signed Release install, continue using:
 
 ```bash
 ./scripts/release.sh

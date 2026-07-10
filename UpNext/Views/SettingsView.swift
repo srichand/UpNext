@@ -7,6 +7,10 @@ struct SettingsView: View {
     var appUpdater: AppUpdater
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
 
+    private let projectURL = URL(string: "https://github.com/srichand/UpNext")!
+    private let privacyURL = URL(string: "https://github.com/srichand/UpNext/blob/main/PRIVACY.md")!
+    private let supportURL = URL(string: "https://github.com/srichand/UpNext/issues/new")!
+
     private var groupedCalendars: [(String, [EKCalendar])] {
         Dictionary(grouping: calendarManager.availableCalendars) { $0.source.title }
             .sorted { $0.key.localizedCaseInsensitiveCompare($1.key) == .orderedAscending }
@@ -105,6 +109,13 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
                 }
             }
+
+            Section("About") {
+                LabeledContent("Version", value: versionDescription)
+                Link("Project Website", destination: projectURL)
+                Link("Privacy Policy", destination: privacyURL)
+                Link("Report an Issue", destination: supportURL)
+            }
         }
         .formStyle(.grouped)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -137,5 +148,14 @@ struct SettingsView: View {
             get: { appUpdater.automaticallyDownloadsUpdates },
             set: { appUpdater.automaticallyDownloadsUpdates = $0 }
         )
+    }
+
+    private var versionDescription: String {
+        let info = Bundle.main.infoDictionary ?? [:]
+        let version = info["CFBundleShortVersionString"] as? String ?? "Unknown"
+        let build = info["CFBundleVersion"] as? String ?? ""
+
+        guard !build.isEmpty else { return version }
+        return "\(version) (\(build))"
     }
 }

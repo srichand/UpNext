@@ -18,6 +18,15 @@ final class ScreenshotGenerationTests: XCTestCase {
                 return .dark
             }
         }
+
+        var backgroundColor: Color {
+            switch self {
+            case .light:
+                Color(white: 0.93)
+            case .dark:
+                Color(white: 0.12)
+            }
+        }
     }
 
     func testGenerateMenuBarPopoverScreenshots() throws {
@@ -37,6 +46,10 @@ final class ScreenshotGenerationTests: XCTestCase {
             scenario: .emptyDay,
             appearance: .light
         )
+        try capturePopover(
+            scenario: .calendarAccessRequired,
+            appearance: .light
+        )
     }
 
     private func capturePopover(
@@ -46,7 +59,7 @@ final class ScreenshotGenerationTests: XCTestCase {
         let viewModel = MenuBarPreviewFactory.makeViewModel(scenario: scenario)
         let content = MenuBarPopover(viewModel: viewModel)
             .environment(\.colorScheme, appearance.colorScheme)
-            .background(Color(nsColor: .windowBackgroundColor))
+            .background(appearance.backgroundColor)
 
         let renderer = ImageRenderer(content: content)
         renderer.scale = 2

@@ -1,3 +1,4 @@
+import EventKit
 import Foundation
 import SwiftUI
 
@@ -5,6 +6,7 @@ enum MenuBarPreviewScenario: String, CaseIterable {
     case activeMeeting = "active-meeting"
     case packedDay = "packed-day"
     case emptyDay = "empty-day"
+    case calendarAccessRequired = "calendar-access-required"
 }
 
 enum MenuBarPreviewFactory {
@@ -23,7 +25,10 @@ enum MenuBarPreviewFactory {
     ) -> MenuBarViewModel {
         let calendarManager = CalendarManager(
             startNotificationObserver: false,
-            startPeriodicRefresh: false
+            startPeriodicRefresh: false,
+            authorizationStatusProvider: {
+                scenario == .calendarAccessRequired ? .denied : .fullAccess
+            }
         )
         calendarManager.events = events(for: scenario, now: now)
 
@@ -96,7 +101,7 @@ enum MenuBarPreviewFactory {
                     color: .purple
                 )
             ]
-        case .emptyDay:
+        case .emptyDay, .calendarAccessRequired:
             return []
         }
     }

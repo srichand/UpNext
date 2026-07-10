@@ -1,3 +1,4 @@
+import EventKit
 import XCTest
 @testable import UpNextCore
 
@@ -8,6 +9,15 @@ final class MenuBarViewModelTests: XCTestCase {
         let viewModel = makeViewModel(now: now, events: [])
 
         XCTAssertEqual(viewModel.menuBarText, "No more meetings")
+    }
+
+    @MainActor
+    func testMenuBarTextExplainsWhenCalendarAccessIsDenied() {
+        let now = Date(timeIntervalSince1970: 1_700_000_000)
+        let viewModel = makeViewModel(now: now, events: [], authorizationStatus: .denied)
+
+        XCTAssertTrue(viewModel.needsCalendarAccess)
+        XCTAssertEqual(viewModel.menuBarText, "Calendar access needed")
     }
 
     @MainActor
@@ -66,10 +76,15 @@ final class MenuBarViewModelTests: XCTestCase {
     }
 
     @MainActor
-    private func makeViewModel(now: Date, events: [CalendarEvent]) -> MenuBarViewModel {
+    private func makeViewModel(
+        now: Date,
+        events: [CalendarEvent],
+        authorizationStatus: EKAuthorizationStatus = .fullAccess
+    ) -> MenuBarViewModel {
         let calendarManager = CalendarManager(
             startNotificationObserver: false,
-            startPeriodicRefresh: false
+            startPeriodicRefresh: false,
+            authorizationStatusProvider: { authorizationStatus }
         )
         calendarManager.events = events
 

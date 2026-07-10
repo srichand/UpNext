@@ -25,7 +25,12 @@ final class MenuBarViewModel {
         upcomingEvents.first
     }
 
+    var needsCalendarAccess: Bool {
+        calendarManager.authorizationStatus != .fullAccess
+    }
+
     var menuBarText: String {
+        guard !needsCalendarAccess else { return "Calendar access needed" }
         guard let next = nextEvent else { return "No more meetings" }
         let title = next.title.truncated(to: 20)
         if next.startDate <= currentDate {
