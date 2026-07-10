@@ -5,7 +5,7 @@ A macOS menu bar app that shows your next upcoming calendar meeting at a glance.
 ## Project Overview
 
 **Type:** Native macOS menu bar utility (no dock icon, no main window)
-**Platform:** macOS 14+ (Sonoma)
+**Platform:** macOS 15+ (Sequoia)
 **UI Framework:** SwiftUI
 **Language:** Swift 6 with strict concurrency
 **Build System:** Xcode / Swift Package Manager

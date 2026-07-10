@@ -43,6 +43,14 @@ final class ScreenshotGenerationTests: XCTestCase {
             appearance: .light
         )
         try capturePopover(
+            scenario: .laterToday,
+            appearance: .light
+        )
+        try capturePopover(
+            scenario: .laterToday,
+            appearance: .dark
+        )
+        try capturePopover(
             scenario: .emptyDay,
             appearance: .light
         )
@@ -57,7 +65,10 @@ final class ScreenshotGenerationTests: XCTestCase {
         appearance: Appearance
     ) throws {
         let viewModel = MenuBarPreviewFactory.makeViewModel(scenario: scenario)
-        let content = MenuBarPopover(viewModel: viewModel)
+        let content = MenuBarPopover(
+            viewModel: viewModel,
+            resetsInitialFocus: false
+        )
             .environment(\.colorScheme, appearance.colorScheme)
             .background(appearance.backgroundColor)
 

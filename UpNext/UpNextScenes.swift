@@ -17,7 +17,7 @@ public struct UpNextScenes: Scene {
         }
         .menuBarExtraStyle(.window)
 
-        Window("Settings", id: "settings") {
+        Settings {
             SettingsView(
                 calendarManager: viewModel.calendarManager,
                 appUpdater: appUpdater

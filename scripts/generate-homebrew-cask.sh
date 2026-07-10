@@ -34,7 +34,7 @@ cask "upnext" do
   homepage "https://github.com/srichand/UpNext"
 
   auto_updates true
-  depends_on macos: :sonoma
+  depends_on macos: :sequoia
 
   app "UpNext.app"
 

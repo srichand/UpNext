@@ -18,17 +18,17 @@ struct SettingsView: View {
 
     var body: some View {
         TabView {
-            calendarsTab
-                .tabItem {
-                    Label("Calendars", systemImage: "calendar")
-                }
-
             generalTab
                 .tabItem {
                     Label("General", systemImage: "gearshape")
                 }
+
+            calendarsTab
+                .tabItem {
+                    Label("Calendars", systemImage: "calendar")
+                }
         }
-        .frame(minWidth: 380, minHeight: 420)
+        .frame(width: 440, height: 380)
         .tint(.coral)
     }
 

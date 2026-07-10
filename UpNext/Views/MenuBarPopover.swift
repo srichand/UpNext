@@ -1,8 +1,15 @@
+import AppKit
 import SwiftUI
 
 struct MenuBarPopover: View {
     let viewModel: MenuBarViewModel
-    @Environment(\.openWindow) private var openWindow
+    private let resetsInitialFocus: Bool
+    @Environment(\.openSettings) private var openSettingsAction
+
+    init(viewModel: MenuBarViewModel, resetsInitialFocus: Bool = true) {
+        self.viewModel = viewModel
+        self.resetsInitialFocus = resetsInitialFocus
+    }
 
     var body: some View {
         // Resolve once so non-today renders do not re-query EventKit multiple times.
@@ -24,7 +31,12 @@ struct MenuBarPopover: View {
             Divider()
             footerButtons
         }
-        .frame(width: 300)
+        .frame(width: 320)
+        .background {
+            if resetsInitialFocus {
+                InitialFocusResetter()
+            }
+        }
         .onDisappear {
             viewModel.resetToToday()
         }
@@ -36,11 +48,12 @@ struct MenuBarPopover: View {
         HStack {
             Button(action: viewModel.goToPreviousDay) {
                 Image(systemName: "chevron.left")
-                    .font(.body.weight(.semibold))
-                    .frame(width: 28, height: 28)
+                    .font(.body.weight(.medium))
+                    .frame(width: 30, height: 28)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .help("Previous day")
 
             Spacer()
 
@@ -67,14 +80,16 @@ struct MenuBarPopover: View {
 
             Button(action: viewModel.goToNextDay) {
                 Image(systemName: "chevron.right")
-                    .font(.body.weight(.semibold))
-                    .frame(width: 28, height: 28)
+                    .font(.body.weight(.medium))
+                    .frame(width: 30, height: 28)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .help("Next day")
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 10)
+        .controlSize(.small)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 11)
     }
 
     private var emptyState: some View {
@@ -155,14 +170,33 @@ struct MenuBarPopover: View {
             .buttonStyle(.plain)
             .foregroundStyle(.secondary)
         }
-        .font(.caption)
+        .font(.callout)
+        .controlSize(.small)
         .padding(.horizontal, 16)
-        .padding(.vertical, 10)
+        .padding(.vertical, 9)
     }
 
     private func openSettings() {
-        openWindow(id: "settings")
+        openSettingsAction()
         NSApplication.shared.activate(ignoringOtherApps: true)
+    }
+}
+
+private struct InitialFocusResetter: NSViewRepresentable {
+    func makeNSView(context: Context) -> InitialFocusResettingView {
+        InitialFocusResettingView()
+    }
+
+    func updateNSView(_ nsView: InitialFocusResettingView, context: Context) {}
+}
+
+private final class InitialFocusResettingView: NSView {
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+
+        DispatchQueue.main.async { [weak self] in
+            self?.window?.makeFirstResponder(nil)
+        }
     }
 }
 
@@ -173,15 +207,15 @@ struct EventRow: View {
     let viewModel: MenuBarViewModel
 
     var body: some View {
-        HStack(alignment: .top, spacing: 10) {
+        HStack(alignment: .top, spacing: 11) {
             RoundedRectangle(cornerRadius: 2)
                 .fill(event.calendarColor)
                 .frame(width: 4)
-                .padding(.vertical, 2)
+                .padding(.vertical, 1)
 
             VStack(alignment: .leading, spacing: 3) {
                 Text(event.title)
-                    .font(.headline)
+                    .font(.body.weight(.semibold))
                     .lineLimit(1)
 
                 Text(viewModel.timeRangeString(for: event))
@@ -201,15 +235,15 @@ struct EventRow: View {
             if viewModel.isSelectedDateToday, event.id == viewModel.nextEvent?.id {
                 Text(statusLabel)
                     .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundStyle(statusColor)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(statusColor.opacity(0.12), in: Capsule())
+                    .fontWeight(.semibold)
+                    .foregroundStyle(statusForegroundStyle)
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 4)
+                    .background(statusBackgroundStyle, in: Capsule())
             }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 9)
     }
 
     private var statusLabel: String {
@@ -219,11 +253,28 @@ struct EventRow: View {
         return "in \(viewModel.relativeTimeString(for: event.startDate))"
     }
 
-    private var statusColor: Color {
-        isCurrentEvent ? .red : .coral
+    private var statusForegroundStyle: AnyShapeStyle {
+        if isCurrentEvent {
+            return AnyShapeStyle(.white)
+        }
+        return AnyShapeStyle(.primary)
+    }
+
+    private var statusBackgroundStyle: AnyShapeStyle {
+        if isCurrentEvent {
+            return AnyShapeStyle(Color.red)
+        }
+        if isStartingSoon {
+            return AnyShapeStyle(Color.orange.opacity(0.16))
+        }
+        return AnyShapeStyle(.quaternary)
     }
 
     private var isCurrentEvent: Bool {
         event.startDate <= viewModel.currentDate
+    }
+
+    private var isStartingSoon: Bool {
+        event.startDate.timeIntervalSince(viewModel.currentDate) <= 15 * 60
     }
 }

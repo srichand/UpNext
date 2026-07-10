@@ -21,7 +21,7 @@ Your next meeting, always one glance away. UpNext lives in your macOS menu bar a
 
 ## Requirements
 
-- macOS 14.0+
+- macOS 15.0+
 - Xcode 16+
 
 ## Install

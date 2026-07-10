@@ -5,6 +5,7 @@ import SwiftUI
 enum MenuBarPreviewScenario: String, CaseIterable {
     case activeMeeting = "active-meeting"
     case packedDay = "packed-day"
+    case laterToday = "later-today"
     case emptyDay = "empty-day"
     case calendarAccessRequired = "calendar-access-required"
 }
@@ -99,6 +100,17 @@ enum MenuBarPreviewFactory {
                     end: now.addingTimeInterval((3 * 60 * 60) + (55 * 60)),
                     location: "Paris, France",
                     color: .purple
+                )
+            ]
+        case .laterToday:
+            return [
+                makeEvent(
+                    id: "later-today",
+                    title: "Art make up for 7/5",
+                    start: now.addingTimeInterval((3 * 60 * 60) + (43 * 60)),
+                    end: now.addingTimeInterval((5 * 60 * 60) + (13 * 60)),
+                    location: nil,
+                    color: .yellow
                 )
             ]
         case .emptyDay, .calendarAccessRequired:
