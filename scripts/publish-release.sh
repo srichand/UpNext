@@ -152,6 +152,20 @@ fi
 
 git -C "$REPO_ROOT" push origin "$TAG"
 
+TAG_IS_VISIBLE=0
+for _ in {1..10}; do
+  if gh api "repos/$REPOSITORY/git/ref/tags/$TAG" >/dev/null 2>&1; then
+    TAG_IS_VISIBLE=1
+    break
+  fi
+  sleep 2
+done
+
+if [[ "$TAG_IS_VISIBLE" != "1" ]]; then
+  echo "GitHub did not make tag $TAG visible in time" >&2
+  exit 1
+fi
+
 gh release create "$TAG" \
   --repo "$REPOSITORY" \
   --verify-tag \
