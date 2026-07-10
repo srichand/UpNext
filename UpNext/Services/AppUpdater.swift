@@ -73,23 +73,24 @@ struct AppUpdaterConfiguration {
 
 @MainActor
 @Observable
-final class AppUpdater {
+final class AppUpdater: NSObject, @preconcurrency SPUStandardUserDriverDelegate {
     let configuration: AppUpdaterConfiguration
+    private(set) var availableUpdateVersion: String?
 
     @ObservationIgnored
-    private let updaterController: SPUStandardUpdaterController?
+    private var updaterController: SPUStandardUpdaterController?
 
-    init(bundle: Bundle = .main) {
+    init(bundle: Bundle = .main, availableUpdateVersion: String? = nil) {
         configuration = AppUpdaterConfiguration(infoDictionary: bundle.infoDictionary ?? [:])
+        self.availableUpdateVersion = availableUpdateVersion
+        super.init()
 
         if configuration.isConfigured {
             updaterController = SPUStandardUpdaterController(
                 startingUpdater: true,
                 updaterDelegate: nil,
-                userDriverDelegate: nil
+                userDriverDelegate: self
             )
-        } else {
-            updaterController = nil
         }
     }
 
@@ -120,8 +121,52 @@ final class AppUpdater {
         updater?.allowsAutomaticUpdates ?? false
     }
 
+    var isUpdateAvailable: Bool {
+        availableUpdateVersion != nil
+    }
+
     func checkForUpdates() {
         updater?.checkForUpdates()
+    }
+
+    // MARK: - Gentle scheduled update reminders
+
+    var supportsGentleScheduledUpdateReminders: Bool {
+        true
+    }
+
+    func standardUserDriverShouldHandleShowingScheduledUpdate(
+        _ update: SUAppcastItem,
+        andInImmediateFocus immediateFocus: Bool
+    ) -> Bool {
+        // Let Sparkle present alerts when it can do so without surprising the
+        // user. Otherwise, keep the update discoverable in UpNext's menu UI.
+        immediateFocus
+    }
+
+    func standardUserDriverWillHandleShowingUpdate(
+        _ handleShowingUpdate: Bool,
+        forUpdate update: SUAppcastItem,
+        state: SPUUserUpdateState
+    ) {
+        guard !handleShowingUpdate, !state.userInitiated else { return }
+        showUpdateReminder(forVersion: update.displayVersionString)
+    }
+
+    func standardUserDriverDidReceiveUserAttention(forUpdate update: SUAppcastItem) {
+        dismissUpdateReminder()
+    }
+
+    func standardUserDriverWillFinishUpdateSession() {
+        dismissUpdateReminder()
+    }
+
+    func showUpdateReminder(forVersion version: String) {
+        availableUpdateVersion = version
+    }
+
+    func dismissUpdateReminder() {
+        availableUpdateVersion = nil
     }
 
     private var updater: SPUUpdater? {

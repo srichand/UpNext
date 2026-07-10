@@ -7,6 +7,7 @@ enum MenuBarPreviewScenario: String, CaseIterable {
     case packedDay = "packed-day"
     case laterToday = "later-today"
     case tomorrow = "tomorrow"
+    case updateAvailable = "update-available"
     case emptyDay = "empty-day"
     case calendarAccessRequired = "calendar-access-required"
 }
@@ -111,7 +112,7 @@ enum MenuBarPreviewFactory {
                     color: .purple
                 )
             ]
-        case .laterToday:
+        case .laterToday, .updateAvailable:
             return [
                 makeEvent(
                     id: "later-today",

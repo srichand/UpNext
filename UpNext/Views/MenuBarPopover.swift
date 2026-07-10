@@ -3,11 +3,20 @@ import SwiftUI
 
 struct MenuBarPopover: View {
     let viewModel: MenuBarViewModel
+    let availableUpdateVersion: String?
+    let checkForUpdates: () -> Void
     private let resetsInitialFocus: Bool
     @Environment(\.openSettings) private var openSettingsAction
 
-    init(viewModel: MenuBarViewModel, resetsInitialFocus: Bool = true) {
+    init(
+        viewModel: MenuBarViewModel,
+        availableUpdateVersion: String? = nil,
+        checkForUpdates: @escaping () -> Void = {},
+        resetsInitialFocus: Bool = true
+    ) {
         self.viewModel = viewModel
+        self.availableUpdateVersion = availableUpdateVersion
+        self.checkForUpdates = checkForUpdates
         self.resetsInitialFocus = resetsInitialFocus
     }
 
@@ -26,6 +35,11 @@ struct MenuBarPopover: View {
                 emptyState
             } else {
                 eventList(selectedDateEvents)
+            }
+
+            if availableUpdateVersion != nil {
+                Divider()
+                updateAvailableRow
             }
 
             Divider()
@@ -174,6 +188,33 @@ struct MenuBarPopover: View {
         .controlSize(.small)
         .padding(.horizontal, 16)
         .padding(.vertical, 9)
+    }
+
+    private var updateAvailableRow: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "arrow.down.circle.fill")
+                .font(.title3)
+                .foregroundStyle(.tint)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("UpNext \(availableUpdateVersion ?? "") is available")
+                    .font(.callout.weight(.semibold))
+                Text("Install the latest improvements.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            Button("Update…", action: checkForUpdates)
+                .buttonStyle(.plain)
+                .font(.callout.weight(.semibold))
+                .foregroundStyle(.tint)
+                .accessibilityLabel("Update UpNext to version \(availableUpdateVersion ?? "")")
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
     }
 
     private func openSettings() {

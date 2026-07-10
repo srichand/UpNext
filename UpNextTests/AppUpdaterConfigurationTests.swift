@@ -65,3 +65,23 @@ final class AppUpdaterConfigurationTests: XCTestCase {
         XCTAssertEqual(configuration.missingKeys, ["SUPublicEDKey"])
     }
 }
+
+@MainActor
+final class AppUpdaterReminderTests: XCTestCase {
+    func testGentleReminderTracksAndClearsAvailableVersion() {
+        let updater = AppUpdater(bundle: Bundle(for: Self.self))
+
+        XCTAssertTrue(updater.supportsGentleScheduledUpdateReminders)
+        XCTAssertFalse(updater.isUpdateAvailable)
+
+        updater.showUpdateReminder(forVersion: "1.0.1")
+
+        XCTAssertTrue(updater.isUpdateAvailable)
+        XCTAssertEqual(updater.availableUpdateVersion, "1.0.1")
+
+        updater.dismissUpdateReminder()
+
+        XCTAssertFalse(updater.isUpdateAvailable)
+        XCTAssertNil(updater.availableUpdateVersion)
+    }
+}

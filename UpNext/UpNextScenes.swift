@@ -8,12 +8,21 @@ public struct UpNextScenes: Scene {
 
     public var body: some Scene {
         MenuBarExtra {
-            MenuBarPopover(viewModel: viewModel)
+            MenuBarPopover(
+                viewModel: viewModel,
+                availableUpdateVersion: appUpdater.availableUpdateVersion,
+                checkForUpdates: appUpdater.checkForUpdates
+            )
         } label: {
             HStack(spacing: 4) {
-                Image(systemName: "calendar")
+                Image(systemName: appUpdater.isUpdateAvailable ? "arrow.down.circle.fill" : "calendar")
                 Text(viewModel.menuBarText)
             }
+            .accessibilityLabel(
+                appUpdater.isUpdateAvailable
+                    ? "UpNext update available. \(viewModel.menuBarText)"
+                    : viewModel.menuBarText
+            )
         }
         .menuBarExtraStyle(.window)
 
