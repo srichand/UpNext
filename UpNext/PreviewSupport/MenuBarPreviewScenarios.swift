@@ -6,6 +6,7 @@ enum MenuBarPreviewScenario: String, CaseIterable {
     case activeMeeting = "active-meeting"
     case packedDay = "packed-day"
     case laterToday = "later-today"
+    case tomorrow = "tomorrow"
     case emptyDay = "empty-day"
     case calendarAccessRequired = "calendar-access-required"
 }
@@ -37,9 +38,17 @@ enum MenuBarPreviewFactory {
             calendarManager: calendarManager,
             startRefreshTimer: false,
             requestAccessOnInit: false,
-            nowProvider: { now }
+            nowProvider: { now },
+            selectedDateEventsProvider: { _ in calendarManager.events }
         )
         viewModel.currentDate = now
+        if scenario == .tomorrow {
+            viewModel.selectedDate = Calendar.current.date(
+                byAdding: .day,
+                value: 1,
+                to: now
+            ) ?? now
+        }
         return viewModel
     }
 
@@ -111,6 +120,19 @@ enum MenuBarPreviewFactory {
                     end: now.addingTimeInterval((5 * 60 * 60) + (13 * 60)),
                     location: nil,
                     color: .yellow
+                )
+            ]
+        case .tomorrow:
+            let startDate = now.addingTimeInterval(26 * 60 * 60)
+            let endDate = startDate.addingTimeInterval(45 * 60)
+            return [
+                makeEvent(
+                    id: "tomorrow",
+                    title: "Design review",
+                    start: startDate,
+                    end: endDate,
+                    location: "Studio",
+                    color: .blue
                 )
             ]
         case .emptyDay, .calendarAccessRequired:

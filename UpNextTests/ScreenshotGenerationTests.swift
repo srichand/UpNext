@@ -51,6 +51,10 @@ final class ScreenshotGenerationTests: XCTestCase {
             appearance: .dark
         )
         try capturePopover(
+            scenario: .tomorrow,
+            appearance: .light
+        )
+        try capturePopover(
             scenario: .emptyDay,
             appearance: .light
         )

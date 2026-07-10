@@ -65,7 +65,7 @@ struct MenuBarPopover: View {
                     Button {
                         viewModel.goToToday()
                     } label: {
-                        Text("Today")
+                        Text("Go to Today")
                             .font(.caption)
                             .foregroundStyle(.white)
                             .padding(.horizontal, 8)

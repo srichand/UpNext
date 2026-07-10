@@ -11,7 +11,7 @@ final class MenuBarViewModel {
     var currentDate: Date
 
     /// The date currently being browsed in the popover. Defaults to today.
-    var selectedDate = Date()
+    var selectedDate: Date
 
     private var refreshTimer: Timer?
 
@@ -42,7 +42,7 @@ final class MenuBarViewModel {
     // MARK: - Derived state (popover — selected date)
 
     var isSelectedDateToday: Bool {
-        Calendar.current.isDateInToday(selectedDate)
+        Calendar.current.isDate(selectedDate, inSameDayAs: currentDate)
     }
 
     var selectedDateEvents: [CalendarEvent] {
@@ -55,8 +55,14 @@ final class MenuBarViewModel {
 
     var selectedDateHeaderString: String {
         if isSelectedDateToday { return "Today" }
-        if Calendar.current.isDateInYesterday(selectedDate) { return "Yesterday" }
-        if Calendar.current.isDateInTomorrow(selectedDate) { return "Tomorrow" }
+        if let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: currentDate),
+           Calendar.current.isDate(selectedDate, inSameDayAs: yesterday) {
+            return "Yesterday"
+        }
+        if let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: currentDate),
+           Calendar.current.isDate(selectedDate, inSameDayAs: tomorrow) {
+            return "Tomorrow"
+        }
         let formatter = DateFormatter()
         formatter.dateFormat = "EEEE, MMM d"
         return formatter.string(from: selectedDate)
@@ -79,11 +85,11 @@ final class MenuBarViewModel {
     }
 
     func goToToday() {
-        selectedDate = Date()
+        selectedDate = nowProvider()
     }
 
     func resetToToday() {
-        selectedDate = Date()
+        selectedDate = nowProvider()
     }
 
     // MARK: - Init
@@ -98,7 +104,9 @@ final class MenuBarViewModel {
         self.calendarManager = calendarManager
         self.nowProvider = nowProvider
         self.selectedDateEventsProvider = selectedDateEventsProvider ?? { calendarManager.eventsForDate($0) }
-        self.currentDate = nowProvider()
+        let initialDate = nowProvider()
+        self.currentDate = initialDate
+        self.selectedDate = initialDate
 
         if startRefreshTimer {
             refreshTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { [weak self] _ in
