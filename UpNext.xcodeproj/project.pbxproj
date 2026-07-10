@@ -246,7 +246,7 @@
 				PRODUCT_NAME = UpNext;
 				SDKROOT = macosx;
 				SPARKLE_FEED_URL = "https://github.com/srichand/UpNext/releases/latest/download/appcast.xml";
-				SPARKLE_PUBLIC_ED_KEY = "";
+				SPARKLE_PUBLIC_ED_KEY = "2GV/w+t67iwrxKwZDJkIQpO2aYTAI2p/P+MSahQuHR4=";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_STRICT_CONCURRENCY = complete;
 			};
@@ -392,7 +392,7 @@
 				PRODUCT_NAME = UpNext;
 				SDKROOT = macosx;
 				SPARKLE_FEED_URL = "https://github.com/srichand/UpNext/releases/latest/download/appcast.xml";
-				SPARKLE_PUBLIC_ED_KEY = "";
+				SPARKLE_PUBLIC_ED_KEY = "2GV/w+t67iwrxKwZDJkIQpO2aYTAI2p/P+MSahQuHR4=";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_STRICT_CONCURRENCY = complete;
 			};

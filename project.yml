@@ -43,7 +43,7 @@ targets:
         MARKETING_VERSION: "1.0.0"
         CURRENT_PROJECT_VERSION: "1"
         SPARKLE_FEED_URL: "https://github.com/srichand/UpNext/releases/latest/download/appcast.xml"
-        SPARKLE_PUBLIC_ED_KEY: ""
+        SPARKLE_PUBLIC_ED_KEY: "2GV/w+t67iwrxKwZDJkIQpO2aYTAI2p/P+MSahQuHR4="
         GENERATE_INFOPLIST_FILE: false
         SWIFT_EMIT_LOC_STRINGS: "YES"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
