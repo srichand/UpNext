@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		08AA33A0EB1B4484FBEF75BE /* UpNextCore in Frameworks */ = {isa = PBXBuildFile; productRef = 30E215AD4424833A114FC681 /* UpNextCore */; };
+		0C3E8B62A2A3678D42C3FB96 /* MenuBarPopoverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3E374EA13F1C614E64D6A0 /* MenuBarPopoverTests.swift */; };
+		146ACB0AA0FFF30F9B1241AB /* AppUpdaterConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D74EB207A5D92BBDC63F2082 /* AppUpdaterConfigurationTests.swift */; };
 		36570144600FAB19FA137C57 /* StringExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D46F0C27185A9E86E4F6D1 /* StringExtensionTests.swift */; };
 		3E95D6E414F3FCDDF3B2476A /* MenuBarViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD876A0AE60C85976DB2AFC5 /* MenuBarViewModelTests.swift */; };
 		72C0BDB5E2CD630390C6FD7E /* UpNextApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4622FF8AA10912132C9877 /* UpNextApp.swift */; };
@@ -26,6 +28,8 @@
 		BF4622FF8AA10912132C9877 /* UpNextApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextApp.swift; sourceTree = "<group>"; };
 		C7D8EECCA285D1561DDFF1DD /* UpNext.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UpNext.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C80BCD6A9AFDD69B90812022 /* UpNext */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UpNext; path = .; sourceTree = SOURCE_ROOT; };
+		D74EB207A5D92BBDC63F2082 /* AppUpdaterConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUpdaterConfigurationTests.swift; sourceTree = "<group>"; };
+		DB3E374EA13F1C614E64D6A0 /* MenuBarPopoverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarPopoverTests.swift; sourceTree = "<group>"; };
 		F4D46F0C27185A9E86E4F6D1 /* StringExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -70,7 +74,9 @@
 		6F8B14BEEC9224227E128327 /* UpNextTests */ = {
 			isa = PBXGroup;
 			children = (
+				D74EB207A5D92BBDC63F2082 /* AppUpdaterConfigurationTests.swift */,
 				63D478FF5790CC88D5413F4B /* CalendarManagerTests.swift */,
+				DB3E374EA13F1C614E64D6A0 /* MenuBarPopoverTests.swift */,
 				BD876A0AE60C85976DB2AFC5 /* MenuBarViewModelTests.swift */,
 				00835B511F426B56AEBFCED9 /* ScreenshotGenerationTests.swift */,
 				F4D46F0C27185A9E86E4F6D1 /* StringExtensionTests.swift */,
@@ -199,7 +205,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				146ACB0AA0FFF30F9B1241AB /* AppUpdaterConfigurationTests.swift in Sources */,
 				D34B667C5F5049692709E724 /* CalendarManagerTests.swift in Sources */,
+				0C3E8B62A2A3678D42C3FB96 /* MenuBarPopoverTests.swift in Sources */,
 				3E95D6E414F3FCDDF3B2476A /* MenuBarViewModelTests.swift in Sources */,
 				B96995E58313C907FD7BD9CA /* ScreenshotGenerationTests.swift in Sources */,
 				36570144600FAB19FA137C57 /* StringExtensionTests.swift in Sources */,
@@ -237,6 +245,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.srichand.UpNext;
 				PRODUCT_NAME = UpNext;
 				SDKROOT = macosx;
+				SPARKLE_FEED_URL = "https://github.com/srichand/UpNext/releases/latest/download/appcast.xml";
+				SPARKLE_PUBLIC_ED_KEY = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_STRICT_CONCURRENCY = complete;
 			};
@@ -381,6 +391,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.srichand.UpNext;
 				PRODUCT_NAME = UpNext;
 				SDKROOT = macosx;
+				SPARKLE_FEED_URL = "https://github.com/srichand/UpNext/releases/latest/download/appcast.xml";
+				SPARKLE_PUBLIC_ED_KEY = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_STRICT_CONCURRENCY = complete;
 			};

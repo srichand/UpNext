@@ -4,6 +4,7 @@ import SwiftUI
 
 struct SettingsView: View {
     var calendarManager: CalendarManager
+    var appUpdater: AppUpdater
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
 
     private var groupedCalendars: [(String, [EKCalendar])] {
@@ -66,19 +67,44 @@ struct SettingsView: View {
 
     private var generalTab: some View {
         Form {
-            Toggle("Launch at Login", isOn: $launchAtLogin)
-                .onChange(of: launchAtLogin) { _, newValue in
-                    do {
-                        if newValue {
-                            try SMAppService.mainApp.register()
-                        } else {
-                            try SMAppService.mainApp.unregister()
+            Section("Startup") {
+                Toggle("Launch at Login", isOn: $launchAtLogin)
+                    .onChange(of: launchAtLogin) { _, newValue in
+                        do {
+                            if newValue {
+                                try SMAppService.mainApp.register()
+                            } else {
+                                try SMAppService.mainApp.unregister()
+                            }
+                        } catch {
+                            // Revert if registration fails
+                            launchAtLogin = SMAppService.mainApp.status == .enabled
                         }
-                    } catch {
-                        // Revert if registration fails
-                        launchAtLogin = SMAppService.mainApp.status == .enabled
                     }
+            }
+
+            Section("Updates") {
+                if appUpdater.isConfigured {
+                    Button("Check for Updates…") {
+                        appUpdater.checkForUpdates()
+                    }
+
+                    Toggle(
+                        "Automatically Check for Updates",
+                        isOn: automaticUpdateChecksBinding
+                    )
+
+                    Toggle(
+                        "Automatically Download Updates",
+                        isOn: automaticUpdateDownloadsBinding
+                    )
+                    .disabled(!appUpdater.allowsAutomaticUpdates)
+                } else {
+                    Text(appUpdater.configurationMessage)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
+            }
         }
         .formStyle(.grouped)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -96,6 +122,20 @@ struct SettingsView: View {
                     calendarManager.selectedCalendarIDs.remove(calendar.calendarIdentifier)
                 }
             }
+        )
+    }
+
+    private var automaticUpdateChecksBinding: Binding<Bool> {
+        Binding(
+            get: { appUpdater.automaticallyChecksForUpdates },
+            set: { appUpdater.automaticallyChecksForUpdates = $0 }
+        )
+    }
+
+    private var automaticUpdateDownloadsBinding: Binding<Bool> {
+        Binding(
+            get: { appUpdater.automaticallyDownloadsUpdates },
+            set: { appUpdater.automaticallyDownloadsUpdates = $0 }
         )
     }
 }

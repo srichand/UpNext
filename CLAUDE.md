@@ -45,7 +45,7 @@ A macOS menu bar app that shows your next upcoming calendar meeting at a glance.
 ### Sandboxing & Permissions
 
 - App Sandbox enabled. Calendar entitlement required.
-- No network access needed — everything is local via EventKit.
+- Network client entitlement is used for Sparkle update checks.
 
 ### Settings / Persistence
 
@@ -65,7 +65,7 @@ A macOS menu bar app that shows your next upcoming calendar meeting at a glance.
 - Use `@Observable` (Observation framework, macOS 14+) for view models rather than `ObservableObject`/`@Published`.
 - Keep views thin — logic lives in view models and managers.
 - Prefer value types (structs/enums) over classes where appropriate.
-- No third-party dependencies unless absolutely necessary. EventKit and SwiftUI provide everything needed.
+- Keep third-party dependencies to a minimum. Sparkle is used for direct-release app updates.
 
 ## Build & Run
 

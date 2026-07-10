@@ -2,6 +2,7 @@ import SwiftUI
 
 public struct UpNextScenes: Scene {
     @State private var viewModel = MenuBarViewModel()
+    @State private var appUpdater = AppUpdater()
 
     public init() {}
 
@@ -17,7 +18,10 @@ public struct UpNextScenes: Scene {
         .menuBarExtraStyle(.window)
 
         Window("Settings", id: "settings") {
-            SettingsView(calendarManager: viewModel.calendarManager)
+            SettingsView(
+                calendarManager: viewModel.calendarManager,
+                appUpdater: appUpdater
+            )
         }
     }
 }

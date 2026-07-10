@@ -5,15 +5,18 @@ struct MenuBarPopover: View {
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
+        // Resolve once so non-today renders do not re-query EventKit multiple times.
+        let selectedDateEvents = viewModel.selectedDateEvents
+
         VStack(alignment: .leading, spacing: 0) {
             dateNavigationHeader
 
             Divider()
 
-            if viewModel.selectedDateEvents.isEmpty {
+            if selectedDateEvents.isEmpty {
                 emptyState
             } else {
-                eventList
+                eventList(selectedDateEvents)
             }
 
             Divider()
@@ -85,12 +88,12 @@ struct MenuBarPopover: View {
         .padding(.vertical, 24)
     }
 
-    private var eventList: some View {
+    private func eventList(_ selectedDateEvents: [CalendarEvent]) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            ForEach(Array(viewModel.selectedDateEvents.enumerated()), id: \.element.id) { index, event in
+            ForEach(Array(selectedDateEvents.enumerated()), id: \.element.id) { index, event in
                 EventRow(event: event, viewModel: viewModel)
 
-                if index < viewModel.selectedDateEvents.count - 1 {
+                if index < selectedDateEvents.count - 1 {
                     Divider()
                         .padding(.horizontal, 12)
                 }

@@ -5,6 +5,7 @@ import SwiftUI
 final class MenuBarViewModel {
     let calendarManager: CalendarManager
     private let nowProvider: @Sendable () -> Date
+    private let selectedDateEventsProvider: @MainActor @Sendable (Date) -> [CalendarEvent]
 
     /// Tick updated every 30 s to drive recomputation of relative times.
     var currentDate: Date
@@ -43,7 +44,7 @@ final class MenuBarViewModel {
         if isSelectedDateToday {
             return calendarManager.events.filter { $0.endDate > currentDate }
         } else {
-            return calendarManager.eventsForDate(selectedDate)
+            return selectedDateEventsProvider(selectedDate)
         }
     }
 
@@ -86,10 +87,12 @@ final class MenuBarViewModel {
         calendarManager: CalendarManager = CalendarManager(),
         startRefreshTimer: Bool = true,
         requestAccessOnInit: Bool = true,
-        nowProvider: @escaping @Sendable () -> Date = Date.init
+        nowProvider: @escaping @Sendable () -> Date = Date.init,
+        selectedDateEventsProvider: (@MainActor @Sendable (Date) -> [CalendarEvent])? = nil
     ) {
         self.calendarManager = calendarManager
         self.nowProvider = nowProvider
+        self.selectedDateEventsProvider = selectedDateEventsProvider ?? { calendarManager.eventsForDate($0) }
         self.currentDate = nowProvider()
 
         if startRefreshTimer {
