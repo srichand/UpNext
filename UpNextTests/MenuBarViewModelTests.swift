@@ -76,6 +76,80 @@ final class MenuBarViewModelTests: XCTestCase {
     }
 
     @MainActor
+    func testOlderDateQueryCannotOverwriteNewerSelectedDate() async {
+        let now = Date(timeIntervalSince1970: 1_700_000_000)
+        let firstDate = Calendar.current.date(byAdding: .day, value: 1, to: now)!
+        let secondDate = Calendar.current.date(byAdding: .day, value: 2, to: now)!
+        let provider = ControlledDateEventsProvider()
+        let viewModel = MenuBarViewModel(
+            calendarManager: CalendarManager(
+                startNotificationObserver: false,
+                startPeriodicRefresh: false
+            ),
+            startRefreshTimer: false,
+            requestAccessOnInit: false,
+            nowProvider: { now },
+            selectedDateEventsProvider: { date in await provider.events(for: date) }
+        )
+
+        viewModel.selectedDate = firstDate
+        let firstStarted = await provider.waitForRequestCount(1)
+        XCTAssertTrue(firstStarted)
+        viewModel.selectedDate = secondDate
+        let secondStarted = await provider.waitForRequestCount(2)
+        XCTAssertTrue(secondStarted)
+
+        let secondEvent = makeEvent(
+            id: "second",
+            title: "Second date",
+            start: secondDate,
+            end: secondDate.addingTimeInterval(60)
+        )
+        await provider.completeRequest(1, with: [secondEvent])
+        await waitUntil { viewModel.selectedDateEvents.map(\.id) == ["second"] }
+
+        let firstEvent = makeEvent(
+            id: "first",
+            title: "First date",
+            start: firstDate,
+            end: firstDate.addingTimeInterval(60)
+        )
+        await provider.completeRequest(0, with: [firstEvent])
+        await Task.yield()
+
+        XCTAssertEqual(viewModel.selectedDateEvents.map(\.id), ["second"])
+    }
+
+    @MainActor
+    func testCalendarSelectionChangeRefreshesBrowsedDate() async {
+        let now = Date(timeIntervalSince1970: 1_700_000_000)
+        let selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: now)!
+        let provider = ControlledDateEventsProvider()
+        let calendarManager = CalendarManager(
+            startNotificationObserver: false,
+            startPeriodicRefresh: false,
+            authorizationStatusProvider: { .fullAccess }
+        )
+        let viewModel = MenuBarViewModel(
+            calendarManager: calendarManager,
+            startRefreshTimer: false,
+            requestAccessOnInit: false,
+            nowProvider: { now },
+            selectedDateEventsProvider: { date in await provider.events(for: date) }
+        )
+
+        viewModel.selectedDate = selectedDate
+        let firstStarted = await provider.waitForRequestCount(1)
+        XCTAssertTrue(firstStarted)
+        await provider.completeRequest(0, with: [])
+
+        calendarManager.selectedCalendarIDs = ["work"]
+        let refreshStarted = await provider.waitForRequestCount(2)
+        XCTAssertTrue(refreshStarted)
+        await provider.completeRequest(1, with: [])
+    }
+
+    @MainActor
     private func makeViewModel(
         now: Date,
         events: [CalendarEvent],
@@ -105,5 +179,34 @@ final class MenuBarViewModelTests: XCTestCase {
             startDate: start,
             endDate: end
         )
+    }
+
+    @MainActor
+    private func waitUntil(_ predicate: @escaping @MainActor () -> Bool) async {
+        for _ in 0..<1_000 where !predicate() {
+            await Task.yield()
+        }
+        XCTAssertTrue(predicate())
+    }
+}
+
+private actor ControlledDateEventsProvider {
+    private var requests: [CheckedContinuation<[CalendarEvent], Never>] = []
+
+    func events(for date: Date) async -> [CalendarEvent] {
+        await withCheckedContinuation { continuation in
+            requests.append(continuation)
+        }
+    }
+
+    func waitForRequestCount(_ count: Int) async -> Bool {
+        for _ in 0..<1_000 where requests.count < count {
+            await Task.yield()
+        }
+        return requests.count >= count
+    }
+
+    func completeRequest(_ index: Int, with events: [CalendarEvent]) {
+        requests[index].resume(returning: events)
     }
 }

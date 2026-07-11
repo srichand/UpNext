@@ -1,4 +1,3 @@
-import EventKit
 import ServiceManagement
 import SwiftUI
 
@@ -11,8 +10,8 @@ struct SettingsView: View {
     private let privacyURL = URL(string: "https://github.com/srichand/UpNext/blob/main/PRIVACY.md")!
     private let supportURL = URL(string: "https://github.com/srichand/UpNext/issues/new")!
 
-    private var groupedCalendars: [(String, [EKCalendar])] {
-        Dictionary(grouping: calendarManager.availableCalendars) { $0.source.title }
+    private var groupedCalendars: [(String, [CalendarDescriptor])] {
+        Dictionary(grouping: calendarManager.availableCalendars) { $0.sourceTitle }
             .sorted { $0.key.localizedCaseInsensitiveCompare($1.key) == .orderedAscending }
     }
 
@@ -47,11 +46,11 @@ struct SettingsView: View {
                 Form {
                     ForEach(groupedCalendars, id: \.0) { account, calendars in
                         Section(account) {
-                            ForEach(calendars, id: \.calendarIdentifier) { calendar in
+                            ForEach(calendars) { calendar in
                                 Toggle(isOn: calendarBinding(for: calendar)) {
                                     HStack(spacing: 8) {
                                         Circle()
-                                            .fill(Color.safeCalendarColor(calendar.cgColor))
+                                            .fill(calendar.color)
                                             .frame(width: 10, height: 10)
                                         Text(calendar.title)
                                     }
@@ -123,14 +122,14 @@ struct SettingsView: View {
 
     // MARK: - Helpers
 
-    private func calendarBinding(for calendar: EKCalendar) -> Binding<Bool> {
+    private func calendarBinding(for calendar: CalendarDescriptor) -> Binding<Bool> {
         Binding(
-            get: { calendarManager.selectedCalendarIDs.contains(calendar.calendarIdentifier) },
+            get: { calendarManager.selectedCalendarIDs.contains(calendar.id) },
             set: { isOn in
                 if isOn {
-                    calendarManager.selectedCalendarIDs.insert(calendar.calendarIdentifier)
+                    calendarManager.selectedCalendarIDs.insert(calendar.id)
                 } else {
-                    calendarManager.selectedCalendarIDs.remove(calendar.calendarIdentifier)
+                    calendarManager.selectedCalendarIDs.remove(calendar.id)
                 }
             }
         )

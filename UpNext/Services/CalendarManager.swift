@@ -5,13 +5,14 @@ import SwiftUI
 @MainActor
 final class CalendarManager {
     static let selectedCalendarIDsDefaultsKey = "selectedCalendarIDs"
+    static let dataDidChangeNotification = Notification.Name("CalendarManagerDataDidChange")
 
-    private let eventStore = EKEventStore()
+    private let eventStoreQuery: any EventStoreQuerying
     private let authorizationStatusProvider: @Sendable () -> EKAuthorizationStatus
     private let shouldStartPeriodicRefresh: Bool
 
     var events: [CalendarEvent] = []
-    var availableCalendars: [EKCalendar] = []
+    var availableCalendars: [CalendarDescriptor] = []
     var authorizationStatus: EKAuthorizationStatus
 
     var selectedCalendarIDs: Set<String> {
@@ -20,11 +21,14 @@ final class CalendarManager {
                 Array(selectedCalendarIDs),
                 forKey: Self.selectedCalendarIDsDefaultsKey
             )
+            NotificationCenter.default.post(name: Self.dataDidChangeNotification, object: self)
             fetchEvents()
         }
     }
 
     private var hasLoadedInitialSelection: Bool
+    private var eventFetchGeneration = 0
+    private var calendarLoadGeneration = 0
     @ObservationIgnored
     nonisolated(unsafe) private var observerToken: Any?
     @ObservationIgnored
@@ -39,11 +43,13 @@ final class CalendarManager {
         startPeriodicRefresh: Bool = true,
         authorizationStatusProvider: @escaping @Sendable () -> EKAuthorizationStatus = {
             EKEventStore.authorizationStatus(for: .event)
-        }
+        },
+        eventStoreQuery: any EventStoreQuerying = EventStoreWorker()
     ) {
         self.authorizationStatusProvider = authorizationStatusProvider
         self.shouldStartPeriodicRefresh = startPeriodicRefresh
         self.authorizationStatus = authorizationStatusProvider()
+        self.eventStoreQuery = eventStoreQuery
 
         if let saved = UserDefaults.standard.stringArray(
             forKey: Self.selectedCalendarIDsDefaultsKey
@@ -72,7 +78,7 @@ final class CalendarManager {
 
     func requestAccess() async {
         do {
-            _ = try await eventStore.requestFullAccessToEvents()
+            try await eventStoreQuery.requestFullAccess()
         } catch {
             // Fall through and refresh authorization state below.
         }
@@ -84,13 +90,13 @@ final class CalendarManager {
             return
         }
 
-        loadCalendars()
+        await loadCalendars()
         fetchEvents()
     }
 
     // MARK: - Calendars
 
-    func loadCalendars() {
+    func loadCalendars() async {
         refreshAuthorizationStatus()
 
         guard hasCalendarReadAccess else {
@@ -98,17 +104,28 @@ final class CalendarManager {
             return
         }
 
-        availableCalendars = eventStore.calendars(for: .event)
-            .sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
+        calendarLoadGeneration += 1
+        let generation = calendarLoadGeneration
+        let loadedCalendars = await eventStoreQuery.calendars()
+
+        refreshAuthorizationStatus()
+        guard generation == calendarLoadGeneration, hasCalendarReadAccess else {
+            if !hasCalendarReadAccess {
+                clearCachedCalendarData()
+            }
+            return
+        }
+
+        availableCalendars = loadedCalendars
 
         // First launch — select every calendar by default
         if !hasLoadedInitialSelection {
-            selectedCalendarIDs = Set(availableCalendars.map(\.calendarIdentifier))
+            selectedCalendarIDs = Set(availableCalendars.map(\.id))
             hasLoadedInitialSelection = true
         }
 
         // Prune IDs for calendars that no longer exist
-        let validIDs = Set(availableCalendars.map(\.calendarIdentifier))
+        let validIDs = Set(availableCalendars.map(\.id))
         let pruned = selectedCalendarIDs.intersection(validIDs)
         if pruned != selectedCalendarIDs {
             selectedCalendarIDs = pruned
@@ -121,54 +138,46 @@ final class CalendarManager {
         refreshAuthorizationStatus()
 
         guard hasCalendarReadAccess else {
-            events = []
+            clearCachedCalendarData()
             return
         }
 
-        let cal = Calendar.current
-        let startOfDay = cal.startOfDay(for: Date())
-        guard let endOfDay = cal.date(byAdding: .day, value: 1, to: startOfDay) else { return }
+        eventFetchGeneration += 1
+        let generation = eventFetchGeneration
+        let selectedIDs = selectedCalendarIDs
+        let query = eventStoreQuery
 
-        let predicate = eventStore.predicateForEvents(
-            withStart: startOfDay,
-            end: endOfDay,
-            calendars: nil
-        )
+        Task { [weak self] in
+            let fetchedEvents = await query.events(
+                on: Date(),
+                selectedCalendarIDs: selectedIDs
+            )
 
-        let ekEvents = eventStore.events(matching: predicate)
-
-        events = ekEvents
-            .filter { !$0.isAllDay }
-            .filter { selectedCalendarIDs.contains($0.calendar.calendarIdentifier) }
-            .map { CalendarEvent(from: $0) }
-            .sorted { $0.startDate < $1.startDate }
+            guard let self, generation == self.eventFetchGeneration else { return }
+            self.events = fetchedEvents
+        }
     }
 
     /// Returns events for the given date without mutating stored state.
-    func eventsForDate(_ date: Date) -> [CalendarEvent] {
+    func eventsForDate(_ date: Date) async -> [CalendarEvent] {
         refreshAuthorizationStatus()
 
         guard hasCalendarReadAccess else {
             return []
         }
 
-        let cal = Calendar.current
-        let startOfDay = cal.startOfDay(for: date)
-        guard let endOfDay = cal.date(byAdding: .day, value: 1, to: startOfDay) else { return [] }
-
-        let predicate = eventStore.predicateForEvents(
-            withStart: startOfDay,
-            end: endOfDay,
-            calendars: nil
+        let fetchedEvents = await eventStoreQuery.events(
+            on: date,
+            selectedCalendarIDs: selectedCalendarIDs
         )
 
-        let ekEvents = eventStore.events(matching: predicate)
+        refreshAuthorizationStatus()
+        guard hasCalendarReadAccess else {
+            clearCachedCalendarData()
+            return []
+        }
 
-        return ekEvents
-            .filter { !$0.isAllDay }
-            .filter { selectedCalendarIDs.contains($0.calendar.calendarIdentifier) }
-            .map { CalendarEvent(from: $0) }
-            .sorted { $0.startDate < $1.startDate }
+        return fetchedEvents
     }
 
     // MARK: - Observation
@@ -176,7 +185,7 @@ final class CalendarManager {
     private func setupNotificationObserver() {
         observerToken = NotificationCenter.default.addObserver(
             forName: .EKEventStoreChanged,
-            object: eventStore,
+            object: nil,
             queue: .main
         ) { [weak self] _ in
             Task { @MainActor [weak self] in
@@ -211,8 +220,12 @@ final class CalendarManager {
             return
         }
 
-        loadCalendars()
-        fetchEvents()
+        Task { [weak self] in
+            guard let self else { return }
+            await self.loadCalendars()
+            self.fetchEvents()
+            NotificationCenter.default.post(name: Self.dataDidChangeNotification, object: self)
+        }
     }
 
     private func refreshAuthorizationStatus() {
@@ -230,6 +243,8 @@ final class CalendarManager {
     }
 
     private func clearCachedCalendarData() {
+        eventFetchGeneration += 1
+        calendarLoadGeneration += 1
         availableCalendars = []
         events = []
     }

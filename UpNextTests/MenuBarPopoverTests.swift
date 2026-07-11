@@ -4,7 +4,7 @@ import XCTest
 
 @MainActor
 final class MenuBarPopoverTests: XCTestCase {
-    func testBodyFetchesNonTodayEventsOncePerEvaluation() {
+    func testBodyDoesNotRefetchLoadedNonTodayEvents() async {
         let now = Date(timeIntervalSince1970: 1_700_000_000)
         let selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: now) ?? now
         let queryCounter = QueryCounter()
@@ -31,6 +31,11 @@ final class MenuBarPopoverTests: XCTestCase {
             }
         )
         viewModel.selectedDate = selectedDate
+
+        for _ in 0..<1_000 where queryCounter.count == 0 {
+            await Task.yield()
+        }
+        XCTAssertEqual(queryCounter.count, 1)
 
         _ = MenuBarPopover(viewModel: viewModel).body
 

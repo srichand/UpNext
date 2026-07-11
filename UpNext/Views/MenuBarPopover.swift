@@ -31,6 +31,11 @@ struct MenuBarPopover: View {
 
             if viewModel.needsCalendarAccess {
                 calendarAccessState
+            } else if viewModel.isLoadingSelectedDateEvents {
+                ProgressView()
+                    .controlSize(.small)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 28)
             } else if selectedDateEvents.isEmpty {
                 emptyState
             } else {

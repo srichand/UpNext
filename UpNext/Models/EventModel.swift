@@ -1,6 +1,13 @@
 import EventKit
 import SwiftUI
 
+struct CalendarDescriptor: Identifiable, Sendable {
+    let id: String
+    let title: String
+    let sourceTitle: String
+    let color: Color
+}
+
 struct CalendarEvent: Identifiable, Sendable {
     let id: String
     let title: String
